@@ -15,16 +15,17 @@ description: Day 6 of the Spatial Computing 7-day camp. Teaches interaction desi
 - 수정 후 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 컴파일 검증. `BUILD SUCCEEDED`까지 고치세요.
 - 제스처 동작은 **실기에서 Xcode로 빌드·실행**해서 직접 만져봐야 확인된다고 안내하세요.
 
-## 트리거 시 할 일
+## 트리거 시 할 일 (항상 이 순서: 개념 설명 → 코드 설명 → 프로젝트에 실제 코딩 → 퀴즈)
 
-1. `SpatialCampNotes/day6-interaction-gesture.md` 생성.
-2. **공식 문서 확인 (필수)**: `web_search` + `web_fetch`로 RealityKit 제스처(`EntityGestureRecognizer` 관련 API, `.installGestures()`), `CollisionComponent`, `PhysicsBodyComponent`, visionOS 인터랙션(`SpatialTapGesture`, 시선+핀치 모델) 관련 Apple 공식 문서를 실제로 열어 최신 API로 검증 후 작성.
-3. `ARViewContainer.swift`를 열어 아래 "코드 (실제로 작성)" 내용을 반영.
-4. `xcodebuild ... build`로 컴파일 검증 (위 "프로젝트 규칙" 참고).
-5. 핵심 개념 + 실제로 작성한 코드를 대화창에 설명.
-6. 체크포인트 퀴즈 진행.
-7. `00-dashboard.md`의 Day 6 상태 갱신.
-8. 퀴즈가 모두 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 7(캡스톤)로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day7-mini-project` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day7-mini-project`를 직접 호출**하세요.
+1. **공식 문서 확인 (필수, 조용히 먼저 수행)**: `web_search` + `web_fetch`로 RealityKit 제스처(`EntityGestureRecognizer` 관련 API, `.installGestures()`), `CollisionComponent`, `PhysicsBodyComponent`, visionOS 인터랙션(`SpatialTapGesture`, 시선+핀치 모델) 관련 Apple 공식 문서를 실제로 열어 최신 API로 확인.
+2. **개념 설명**: 아래 "다룰 핵심 개념"을 대화창에 먼저 설명합니다.
+3. **코드 설명**: 아래 "코드 (실제로 작성)" 섹션의 제스처/충돌 코드를 대화창에 보여주며 설명합니다 (아직 파일에 쓰지 않음).
+4. **프로젝트에 실제로 코딩**: `ARViewContainer.swift`에 `generateCollisionShapes` + `installGestures` + 충돌 이벤트 구독을 반영.
+5. `xcodebuild ... build`로 컴파일 검증 (위 "프로젝트 규칙" 참고). 성공/실패를 대화창에 보고.
+6. `SpatialCampNotes/day6-interaction-gesture.md` 생성 — 위 개념/코드 내용을 담아 작성.
+7. 체크포인트 퀴즈 진행.
+8. `00-dashboard.md`의 Day 6 상태 갱신.
+9. 퀴즈가 모두 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 7(캡스톤)로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day7-mini-project` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day7-mini-project`를 직접 호출**하세요.
 
 ## 다룰 핵심 개념
 
@@ -39,6 +40,7 @@ description: Day 6 of the Spatial Computing 7-day camp. Teaches interaction desi
 ```swift
 modelEntity.generateCollisionShapes(recursive: true)
 arView.installGestures([.translation, .rotation, .scale], for: modelEntity)
+status.statusText = "배치 완료! 오브젝트를 드래그/두 손가락으로 회전·확대해보세요"
 ```
 
 `makeUIView`(또는 `Coordinator` 초기화 시 한 번)에 충돌 이벤트 구독 추가:

@@ -15,16 +15,17 @@ description: Day 4 of the Spatial Computing 7-day camp. Teaches RealityKit funda
 - 수정 후 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 컴파일 검증. `BUILD SUCCEEDED`까지 고치세요.
 - 실제 재질/조명 변화는 **실기에서 Xcode로 빌드·실행**해야 눈으로 확인할 수 있다고 안내하세요.
 
-## 트리거 시 할 일
+## 트리거 시 할 일 (항상 이 순서: 개념 설명 → 코드 설명 → 프로젝트에 실제 코딩 → 퀴즈)
 
-1. `SpatialCampNotes/day4-realitykit-basics.md` 생성.
-2. **공식 문서 확인 (필수)**: `web_search` + `web_fetch`로 `Entity`, `Component`, `ModelComponent`, `AnchorEntity`, `RealityKit` 머티리얼(`PhysicallyBasedMaterial` 등) 관련 Apple 공식 문서(`developer.apple.com/documentation/realitykit`)를 실제로 열어 최신 API로 검증 후 작성.
-3. `ARViewContainer.swift`를 열어 아래 "코드 (실제로 작성)" 내용을 반영.
-4. `xcodebuild ... build`로 컴파일 검증 (위 "프로젝트 규칙" 참고).
-5. 핵심 개념 + 실제로 작성한 코드를 대화창에 설명.
-6. 체크포인트 퀴즈 진행.
-7. `00-dashboard.md`의 Day 4 상태 갱신.
-8. 퀴즈가 모두 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 5로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day5-realitykit-advanced` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day5-realitykit-advanced`를 직접 호출**하세요.
+1. **공식 문서 확인 (필수, 조용히 먼저 수행)**: `web_search` + `web_fetch`로 `Entity`, `Component`, `ModelComponent`, `AnchorEntity`, `RealityKit` 머티리얼(`PhysicallyBasedMaterial` 등) 관련 Apple 공식 문서(`developer.apple.com/documentation/realitykit`)를 실제로 열어 최신 API로 확인.
+2. **개념 설명**: 아래 "다룰 핵심 개념"을 대화창에 먼저 설명합니다.
+3. **코드 설명**: 아래 "코드 (실제로 작성)" 섹션의 코드를 대화창에 보여주며 ECS 구조(엔티티/컴포넌트/머티리얼)가 어떻게 조립되는지 설명합니다 (아직 파일에 쓰지 않음).
+4. **프로젝트에 실제로 코딩**: `handleTap`에서 박스를 배치하던 `SimpleMaterial` 부분을 방금 설명한 `PhysicallyBasedMaterial` 코드로 교체.
+5. `xcodebuild ... build`로 컴파일 검증 (위 "프로젝트 규칙" 참고). 성공/실패를 대화창에 보고.
+6. `SpatialCampNotes/day4-realitykit-basics.md` 생성 — 위 개념/코드 내용을 담아 작성.
+7. 체크포인트 퀴즈 진행.
+8. `00-dashboard.md`의 Day 4 상태 갱신.
+9. 퀴즈가 모두 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 5로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day5-realitykit-advanced` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day5-realitykit-advanced`를 직접 호출**하세요.
 
 ## 다룰 핵심 개념
 

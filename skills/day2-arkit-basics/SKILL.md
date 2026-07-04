@@ -16,20 +16,18 @@ description: Day 2 of the Spatial Computing 7-day camp. Teaches ARKit fundamenta
 - Swift 파일을 새로 만들거나 구조를 바꿨다면 반드시 `cd SpatialCampApp && xcodegen generate`를 실행해 `.xcodeproj`를 갱신하세요.
 - 코드를 작성/수정한 뒤에는 반드시 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 **컴파일이 되는지 확인**하세요 (시뮬레이터는 ARKit 카메라 트래킹을 지원하지 않지만 컴파일 검증에는 충분합니다). `BUILD SUCCEEDED`가 나올 때까지 고치고, 실패하면 사용자에게 보여주기 전에 먼저 원인을 고치세요.
 - 빌드가 성공하면 무엇을 바꿨는지 diff 요약을 대화창에 설명하고, **실제 AR 동작(평면 감지, 오브젝트 배치 등)은 실기(아이폰/아이패드)에서 Xcode로 빌드·실행해야 확인 가능**하다는 점을 안내하세요 (시뮬레이터에서는 카메라 트래킹이 동작하지 않음).
+- **테스트 가이드는 콘솔 로그가 아니라 항상 대화창 + 앱 화면 텍스트로 준다**: Xcode 콘솔을 열어보라고 하지 말고, `ARStatusModel`(Day 2에서 생성)의 `statusText`를 통해 앱 화면 상단 배너에 "지금 뭘 해야 하는지 / 방금 뭐가 됐는지"가 실시간으로 보이도록 코드를 유지하세요. 매 Day 코드를 바꿀 때, 그 Day의 새 기능이 트리거되는 시점에 `status.statusText`를 그 기능에 맞는 안내 문구로 갱신하세요.
 
-## 트리거 시 할 일
+## 트리거 시 할 일 (항상 이 순서: 개념 설명 → 코드 설명 → 프로젝트에 실제 코딩 → 퀴즈)
 
-1. `SpatialCampNotes/day2-arkit-basics.md` 생성 (Day 1과 동일한 폴더 관례 사용; 폴더 없으면 새로 생성).
-2. **공식 문서 확인 (필수)**: 코드 작성 전에 `web_search` + `web_fetch`로 `ARSession`, `ARWorldTrackingConfiguration`, `ARPlaneAnchor`, `raycast` 등 아래에 등장하는 API의 Apple 공식 문서(`developer.apple.com/documentation/arkit`)를 실제로 열어 최신 시그니처를 확인하세요. 아래 코드는 참고용 초안이며, 실제 API가 바뀌었다면 fetch한 내용 기준으로 코드를 수정해서 작성하세요.
-3. **프로젝트 최초 생성** (`SpatialCampApp/`이 없을 때만):
-   - `SpatialCampApp/project.yml` 생성 (아래 "project.yml 템플릿" 참고).
-   - `SpatialCampApp/Sources/SpatialCampApp/SpatialCampApp.swift` (App 진입점), `ContentView.swift` 생성.
-   - `SpatialCampApp/Sources/SpatialCampApp/ARViewContainer.swift`를 아래 "코드 (실제로 작성)" 내용으로 생성.
-   - `ContentView.swift`가 `ARViewContainer()`를 보여주도록 연결.
-   - `cd SpatialCampApp && xcodegen generate`로 `.xcodeproj` 생성.
-4. **이미 프로젝트가 있다면**: `ARViewContainer.swift`를 열어서 아래 "코드 (실제로 작성)" 내용에 맞게 수정/추가하세요 (Day 1의 미리보기 코드와 기본적으로 동일한 내용이지만, 이번엔 실제 파일에 반영합니다).
-5. `xcodebuild ... build`로 컴파일 검증 (위 "프로젝트 규칙" 참고). 성공/실패 결과를 대화창에 보고.
-6. 확인한 핵심 개념 + 실제로 작성한 코드를 대화창에도 설명.
+1. **공식 문서 확인 (필수, 조용히 먼저 수행)**: `web_search` + `web_fetch`로 `ARSession`, `ARWorldTrackingConfiguration`, `ARPlaneAnchor`, `raycast` 등 아래에 등장하는 API의 Apple 공식 문서(`developer.apple.com/documentation/arkit`)를 실제로 열어 최신 시그니처를 확인하세요. 아래 코드는 참고용 초안이며, 실제 API가 바뀌었다면 fetch한 내용 기준으로 코드를 수정하세요.
+2. **개념 설명**: 아래 "다룰 핵심 개념"을 대화창에 먼저 설명합니다 (아직 코드/파일 작업 시작 전).
+3. **코드 설명**: 아래 "코드 (실제로 작성)" 섹션의 코드를 대화창에 보여주며, 각 부분이 무엇을 하는지 짚어줍니다 (session 설정, 델리게이트, raycast, 박스 배치 등). 이 시점에는 아직 파일에 쓰지 않습니다.
+4. **프로젝트에 실제로 코딩**:
+   - `SpatialCampApp/project.yml`이 없다면(이 작업 폴더에서 처음 코딩) "프로젝트 최초 생성" 절차 수행: `project.yml`, `SpatialCampApp.swift`, `ARStatusModel.swift`, `ContentView.swift`, `ARViewContainer.swift` 생성 후 `ContentView.swift`가 `ARViewContainer()`와 상태 배너를 보여주도록 연결하고 `cd SpatialCampApp && xcodegen generate` 실행.
+   - 이미 있다면 `ARViewContainer.swift`를 방금 설명한 코드로 수정/추가.
+5. `xcodebuild ... build`로 컴파일 검증 (위 "프로젝트 규칙" 참고). 성공/실패 결과를 대화창에 보고 (실패하면 사용자에게 보고하기 전에 먼저 고칠 것).
+6. `SpatialCampNotes/day2-arkit-basics.md` 생성 (Day 1과 동일한 폴더 관례; 폴더 없으면 새로 생성) — 위에서 설명한 개념/코드 내용을 담아서 작성.
 7. 체크포인트 퀴즈 진행.
 8. `00-dashboard.md`의 Day 2 상태를 ✅로 갱신.
 9. Day 1 노트가 없다면("처음 오는 사용자") 먼저 `/day1-spatial-intro`를 완료했는지 가볍게 확인하되, 막지는 말고 바로 진행해도 괜찮음.
@@ -78,15 +76,39 @@ struct SpatialCampApp: App {
 }
 ```
 
-`ContentView.swift`:
+`ARStatusModel.swift` (앱 화면에 실기 테스트 상태를 보여주기 위한 모델 — 이후 모든 Day가 이걸 통해 상태 문구를 갱신합니다):
+
+```swift
+import Foundation
+
+final class ARStatusModel: ObservableObject {
+    @Published var statusText: String = "카메라로 바닥이나 책상을 천천히 비춰보세요"
+}
+```
+
+`ContentView.swift` (화면 상단에 상태 배너를 오버레이):
 
 ```swift
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var status = ARStatusModel()
+
     var body: some View {
-        ARViewContainer()
-            .edgesIgnoringSafeArea(.all)
+        ZStack(alignment: .top) {
+            ARViewContainer(status: status)
+                .edgesIgnoringSafeArea(.all)
+
+            Text(status.statusText)
+                .font(.callout)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .background(.black.opacity(0.6))
+                .foregroundColor(.white)
+                .clipShape(Capsule())
+                .padding(.top, 60)
+        }
     }
 }
 ```
@@ -110,6 +132,8 @@ import RealityKit
 import ARKit
 
 struct ARViewContainer: UIViewRepresentable {
+    @ObservedObject var status: ARStatusModel
+
     func makeUIView(context: Context) -> ARView {
         let arView = ARView(frame: .zero)
 
@@ -118,6 +142,11 @@ struct ARViewContainer: UIViewRepresentable {
         configuration.environmentTexturing = .automatic
         arView.session.run(configuration)
         arView.session.delegate = context.coordinator
+
+        // 디버그 시각화: 화면에 즉시 뭔가 보여서 트래킹이 실제로 동작 중인지 눈으로 확인할 수 있게 합니다.
+        // .showFeaturePoints: 카메라가 인식한 특징점을 노란 점으로 표시 (폰을 움직이면 바로 보임)
+        // .showAnchorOrigins: 배치된 앵커의 좌표축을 표시
+        arView.debugOptions = [.showFeaturePoints, .showAnchorOrigins]
 
         let tapGesture = UITapGestureRecognizer(
             target: context.coordinator,
@@ -132,16 +161,29 @@ struct ARViewContainer: UIViewRepresentable {
     func updateUIView(_ uiView: ARView, context: Context) {}
 
     func makeCoordinator() -> Coordinator {
-        Coordinator()
+        Coordinator(status: status)
     }
 
     class Coordinator: NSObject, ARSessionDelegate {
         weak var arView: ARView?
+        let status: ARStatusModel
+        private var hasDetectedPlane = false
+
+        init(status: ARStatusModel) {
+            self.status = status
+        }
 
         func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
             for anchor in anchors {
                 guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
                 print("평면 감지됨: \(planeAnchor.alignment), 크기: \(planeAnchor.planeExtent)")
+
+                if !hasDetectedPlane {
+                    hasDetectedPlane = true
+                    DispatchQueue.main.async { [weak self] in
+                        self?.status.statusText = "평면 감지됨! 화면을 탭해서 오브젝트를 배치해보세요"
+                    }
+                }
             }
         }
 
@@ -152,6 +194,7 @@ struct ARViewContainer: UIViewRepresentable {
             let results = arView.raycast(from: tapLocation, allowing: .estimatedPlane, alignment: .horizontal)
             guard let firstResult = results.first else {
                 print("탭한 위치에서 평면을 찾지 못했습니다")
+                status.statusText = "이 위치에는 평면이 없어요 — 감지된 평면 위를 탭해보세요"
                 return
             }
 
@@ -160,12 +203,12 @@ struct ARViewContainer: UIViewRepresentable {
             let box = ModelEntity(mesh: .generateBox(size: 0.1), materials: [SimpleMaterial(color: .systemBlue, isMetallic: false)])
             anchorEntity.addChild(box)
             arView.scene.addAnchor(anchorEntity)
+
+            status.statusText = "배치 완료! 오브젝트가 공간에 고정되어 있는지 폰을 움직이며 확인해보세요"
         }
     }
 }
 ```
-
-실기에서 실행하면: 카메라 화면이 뜨고, 바닥/책상 같은 평면을 비추면 콘솔에 "평면 감지됨" 로그가 찍히고, 화면을 탭하면 그 지점에 파란 박스가 놓입니다.
 
 ## 노트 구조 (`day2-arkit-basics.md`)
 

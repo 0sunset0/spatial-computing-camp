@@ -16,16 +16,17 @@ Day 2에서 만든 `SpatialCampApp/` 프로젝트(xcodegen 기반, `Sources/Spat
 - 코드를 수정한 뒤 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 컴파일 검증하세요. `BUILD SUCCEEDED`가 나올 때까지 고치세요.
 - People Occlusion 결과나 LiDAR mesh는 시뮬레이터에서 볼 수 없으니, **실기(LiDAR 있는 기기면 더 좋음)에서 Xcode로 빌드·실행해야 실제 효과를 확인**할 수 있다고 안내하세요.
 
-## 트리거 시 할 일
+## 트리거 시 할 일 (항상 이 순서: 개념 설명 → 코드 설명 → 프로젝트에 실제 코딩 → 퀴즈)
 
-1. `SpatialCampNotes/day3-arkit-advanced.md` 생성.
-2. **공식 문서 확인 (필수)**: `web_search` + `web_fetch`로 People Occlusion(`ARFrame.SegmentationBuffer`, `frameSemantics = .personSegmentationWithDepth`), Face Tracking(`ARFaceTrackingConfiguration`), Scene Reconstruction(`ARWorldTrackingConfiguration.sceneReconstruction`, LiDAR 관련) 관련 Apple 공식 문서를 실제로 열어 최신 API를 확인 후 작성. 특히 이 영역은 기기 요구사항(LiDAR 유무 등)이 자주 바뀌므로 반드시 최신 문서 기준으로 안내할 것.
-3. `ARViewContainer.swift`를 열어 아래 "코드 (실제로 작성)" 내용을 반영.
-4. `xcodebuild ... build`로 컴파일 검증 (위 "프로젝트 규칙" 참고).
-5. 핵심 개념 + 실제로 작성한 코드를 대화창에 설명.
-6. 체크포인트 퀴즈 진행.
-7. `00-dashboard.md`의 Day 3 상태 갱신.
-8. 퀴즈가 모두 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 4로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day4-realitykit-basics` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day4-realitykit-basics`를 직접 호출**하세요.
+1. **공식 문서 확인 (필수, 조용히 먼저 수행)**: `web_search` + `web_fetch`로 People Occlusion(`ARFrame.SegmentationBuffer`, `frameSemantics = .personSegmentationWithDepth`), Face Tracking(`ARFaceTrackingConfiguration`), Scene Reconstruction(`ARWorldTrackingConfiguration.sceneReconstruction`, LiDAR 관련) 관련 Apple 공식 문서를 실제로 열어 최신 API를 확인. 특히 이 영역은 기기 요구사항(LiDAR 유무 등)이 자주 바뀌므로 반드시 최신 문서 기준으로 확인할 것.
+2. **개념 설명**: 아래 "다룰 핵심 개념"을 대화창에 먼저 설명합니다.
+3. **코드 설명**: 아래 "코드 (실제로 작성)" 섹션의 코드를 대화창에 보여주며 각 옵션이 무엇을 하는지 설명합니다 (아직 파일에 쓰지 않음).
+4. **프로젝트에 실제로 코딩**: `ARViewContainer.swift`를 열어 방금 설명한 내용을 `configuration` 블록에 반영. `SpatialCampApp/`이 없다면(Day 2를 건너뛴 경우) `/day2-arkit-basics`를 완료했는지 확인하되, 막지는 말고 없으면 최소한의 베이스부터 만들고 이어가도 괜찮습니다.
+5. `xcodebuild ... build`로 컴파일 검증 (위 "프로젝트 규칙" 참고). 성공/실패를 대화창에 보고.
+6. `SpatialCampNotes/day3-arkit-advanced.md` 생성 — 위 개념/코드 내용을 담아 작성.
+7. 체크포인트 퀴즈 진행.
+8. `00-dashboard.md`의 Day 3 상태 갱신.
+9. 퀴즈가 모두 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 4로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day4-realitykit-basics` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day4-realitykit-basics`를 직접 호출**하세요.
 
 ## 다룰 핵심 개념
 
@@ -50,9 +51,18 @@ if ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh) {
 }
 
 arView.session.run(configuration)
+
+// Scene Reconstruction(LiDAR mesh)을 화면에서 와이어프레임으로 볼 수 있도록 디버그 옵션 추가
+arView.debugOptions.insert(.showSceneUnderstanding)
 ```
 
 기존 Day 2 코드의 `configuration` 설정 부분을 이 내용으로 대체하고, 나머지(델리게이트, 탭 제스처, raycast 배치 로직)는 그대로 둡니다.
+
+`handleTap` 마지막의 `status.statusText = "배치 완료! ..."` 줄도 occlusion을 테스트하도록 문구를 바꾸세요:
+
+```swift
+status.statusText = "배치 완료! 사람이 오브젝트 앞을 지나가면 자연스럽게 가려지는지 확인해보세요"
+```
 
 ## 노트 구조
 

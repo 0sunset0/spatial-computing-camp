@@ -11,6 +11,8 @@ description: Day 7 (capstone) of the Spatial Computing 7-day camp. Guides the us
 
 Day 2~6에서 발전시켜온 `SpatialCampApp/` 프로젝트(xcodegen 기반)에 캡스톤 기능을 이어서 추가합니다. 새 프로젝트를 만들지 마세요. 필요하면 `ARViewContainer.swift` 외에 새 Swift 파일(예: 새 View, 새 System)을 추가해도 되지만, 새 파일을 추가했다면 `cd SpatialCampApp && xcodegen generate`로 프로젝트를 갱신하세요. 코드를 바꿀 때마다 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 컴파일을 검증하고, `BUILD SUCCEEDED`가 나온 뒤에 다음 단계로 넘어가세요. 실제 동작 확인은 실기에서 Xcode로 빌드·실행해야 한다는 점을 계속 상기시켜 주세요.
 
+**테스트 가이드도 계속 화면으로**: Day 2에서 만든 `ARStatusModel`의 `statusText`를 캡스톤 기능에 맞게 계속 갱신하세요 (예: "터치하면 풍선이 터집니다", "라벨을 배치했어요"). 새 기능을 추가할 때마다 "지금 뭘 하면 되는지 / 뭐가 확인되면 성공인지"를 콘솔 로그가 아니라 **대화창 + 화면 텍스트**로 구체적으로 안내하세요.
+
 ## 트리거 시 할 일
 
 1. `SpatialCampNotes/day7-mini-project.md` 생성 (프로젝트 진행 중 계속 갱신되는 살아있는 문서로 취급).
