@@ -7,13 +7,25 @@ description: Day 5 of the Spatial Computing 7-day camp. Teaches advanced Reality
 
 목표: 콘텐츠를 "살아있게" 만드는 파티클, 애니메이션, 햅틱을 다룬다. ZupZup 프로젝트의 실제 경험(파티클, CoreHaptics)과 가장 밀접한 날.
 
+## 프로젝트 규칙 (실제 Xcode 프로젝트에 코딩 — Day 2~4와 동일한 프로젝트를 이어서 사용)
+
+`SpatialCampApp/Sources/SpatialCampApp/ARViewContainer.swift`를 이어서 수정합니다.
+
+- `handleTap`에서 박스를 배치한 뒤, 아래 "코드 (실제로 작성)"의 파티클 컴포넌트 + CoreHaptics 트리거를 추가하세요 (박스에 파티클을 붙이고, 배치 순간 햅틱도 함께 재생).
+- `import CoreHaptics`를 파일 상단에 추가해야 합니다.
+- 수정 후 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 컴파일 검증. `BUILD SUCCEEDED`까지 고치세요 (시뮬레이터는 햅틱을 재생하지 못하지만 컴파일은 확인 가능).
+- 파티클과 햅틱은 **실기에서 Xcode로 빌드·실행**해야 실제로 느껴진다고 안내하세요.
+
 ## 트리거 시 할 일
 
 1. `SpatialCampNotes/day5-realitykit-advanced.md` 생성.
 2. **공식 문서 확인 (필수)**: `web_search` + `web_fetch`로 `ParticleEmitterComponent`, RealityKit 애니메이션(`Transform` 애니메이션, `AnimationResource`), `CoreHaptics`(`CHHapticEngine`) 관련 Apple 공식 문서를 실제로 열어 최신 API로 검증 후 작성. RealityKit 파티클 API는 상대적으로 최근에 추가된 영역이라 특히 최신 문서 확인이 중요함을 유의.
-3. 핵심 개념 + 코드 예제를 대화창에 설명.
-4. 체크포인트 퀴즈 진행.
-5. `00-dashboard.md`의 Day 5 상태 갱신.
+3. `ARViewContainer.swift`를 열어 아래 "코드 (실제로 작성)" 내용을 반영.
+4. `xcodebuild ... build`로 컴파일 검증 (위 "프로젝트 규칙" 참고).
+5. 핵심 개념 + 실제로 작성한 코드를 대화창에 설명.
+6. 체크포인트 퀴즈 진행.
+7. `00-dashboard.md`의 Day 5 상태 갱신.
+8. 퀴즈가 모두 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 6으로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day6-interaction-gesture` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day6-interaction-gesture`를 직접 호출**하세요.
 
 ## 다룰 핵심 개념
 
@@ -22,9 +34,46 @@ description: Day 5 of the Spatial Computing 7-day camp. Teaches advanced Reality
 - **CoreHaptics 연동**: RealityKit 자체는 햅틱을 직접 제공하지 않으므로, `CHHapticEngine`을 별도로 구성해 시각적 이벤트(파티클 발생, 충돌 등)와 타이밍을 맞춰 트리거하는 패턴.
 - **동기화 패턴**: "파티클 시작 시점 + 햅틱 트리거 시점"을 맞추는 것이 체감 품질에 큰 영향을 준다는 설계 관점 강조 (ZupZup에서 노을님이 실제로 다룬 영역).
 
-## 코드 예제 (fetch한 최신 문서로 검증 후 작성)
+## 코드 (실제로 작성 — `ARViewContainer.swift`)
 
-파티클 컴포넌트 추가 (초안 — 실제 프로퍼티명은 fetch한 문서 기준으로 보정):
+파일 상단 import에 `CoreHaptics` 추가:
+
+```swift
+import SwiftUI
+import RealityKit
+import ARKit
+import CoreHaptics
+```
+
+`Coordinator`에 햅틱 엔진 프로퍼티와 준비 메서드 추가:
+
+```swift
+class Coordinator: NSObject, ARSessionDelegate {
+    weak var arView: ARView?
+    var hapticEngine: CHHapticEngine?
+
+    func prepareHaptics() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        hapticEngine = try? CHHapticEngine()
+        try? hapticEngine?.start()
+    }
+
+    func playPlacementHaptic() {
+        guard let engine = hapticEngine else { return }
+        let event = CHHapticEvent(
+            eventType: .hapticTransient,
+            parameters: [CHHapticEventParameter(parameterID: .hapticIntensity, value: 0.8)],
+            relativeTime: 0
+        )
+        guard let pattern = try? CHHapticPattern(events: [event], parameters: []),
+              let player = try? engine.makePlayer(with: pattern) else { return }
+        try? player.start(atTime: CHHapticTimeImmediate)
+    }
+    // ... 기존 session(_:didAdd:) 는 그대로 유지
+}
+```
+
+`makeUIView`에서 `context.coordinator.prepareHaptics()` 호출을 추가하고, `handleTap`의 박스 배치 코드 뒤에 파티클 + 햅틱 트리거를 추가:
 
 ```swift
 var particles = ParticleEmitterComponent()
@@ -33,29 +82,11 @@ particles.birthRate = 200
 particles.mainEmitter.lifeSpan = 1.5
 particles.mainEmitter.color = .constant(.single(.systemPink))
 modelEntity.components.set(particles)
+
+playPlacementHaptic()
 ```
 
-Transform 애니메이션:
-
-```swift
-var transform = modelEntity.transform
-transform.scale = [1.5, 1.5, 1.5]
-modelEntity.move(to: transform, relativeTo: modelEntity.parent, duration: 0.3, timingFunction: .easeInOut)
-```
-
-CoreHaptics 트리거 (파티클 발생과 동시에):
-
-```swift
-let engine = try CHHapticEngine()
-try engine.start()
-
-let event = CHHapticEvent(eventType: .hapticTransient,
-                           parameters: [CHHapticEventParameter(parameterID: .hapticIntensity, value: 0.8)],
-                           relativeTime: 0)
-let pattern = try CHHapticPattern(events: [event], parameters: [])
-let player = try engine.makePlayer(with: pattern)
-try player.start(atTime: CHHapticTimeImmediate)
-```
+(`playPlacementHaptic()`은 `Coordinator` 안의 메서드이므로 `handleTap`이 `Coordinator`의 메서드라면 `self.playPlacementHaptic()`으로 호출)
 
 ## 노트 구조
 
@@ -63,10 +94,36 @@ Day 1~4와 동일한 템플릿 유지.
 
 ## 퀴즈
 
+이 3문제를 **객관식 4지선다**로, 한 번에 다 보여주지 말고 **한 문제씩** 진행하세요. **AskUserQuestion 도구를 사용해서 사용자가 방향키/클릭으로 보기 중 하나를 고를 수 있게 하세요** (대화창에 A~D 텍스트를 그냥 출력하고 타이핑으로 답하게 하지 마세요):
+
+1. Q1을 AskUserQuestion으로 물어봅니다. `question`에는 문제 본문을, `options`에는 4개 보기를 `label`(짧게, 예: "A", "B"처럼 식별 가능하게 보기 핵심을 담아)과 `description`(보기 전문)으로 각각 담아 전달하세요. 정답을 먼저 알려주지 않습니다.
+2. 사용자가 선택하면 정답 여부를 알려주되, 정답이든 오답이든 **왜 그런지, 다른 보기는 왜 아닌지**까지 피드백합니다 (단순 정오 통보로 끝내지 않기).
+3. 이어서 Q2 → AskUserQuestion → 피드백, 마지막으로 Q3도 동일하게 진행합니다.
+4. 세 문제가 모두 끝나면 다음 단계로 안내합니다.
+
+아래 정답 표시는 채점 참고용이며 **AskUserQuestion의 옵션에는 넣지 말고, 사용자에게 먼저 노출하지도 마세요**:
+
 ```
 Q1. RealityKit 파티클을 트리거하는 것과 CoreHaptics 진동을 동시에 발생시키려면 어떤 구조가 필요할까요?
-Q2. ParticleEmitterComponent와 애니메이션을 함께 쓸 때 주의할 성능 포인트가 있을까요? (추측 답변도 환영)
+A. 파티클과 햅틱은 자동으로 동기화되므로 별도 구조가 필요 없다.
+B. 공통 트리거(제스처/충돌 이벤트 등)에서 ParticleEmitterComponent를 활성화함과 동시에 CHHapticEngine으로 햅틱 패턴을 재생하도록 이벤트 핸들러를 함께 묶어준다.
+C. 햅틱은 RealityKit 내부 API로만 실행할 수 있다.
+D. 파티클을 먼저 재생한 뒤 앱을 재시작해야 햅틱이 반영된다.
+(정답: B)
+
+Q2. ParticleEmitterComponent와 애니메이션을 함께 쓸 때 주의할 성능 포인트가 있을까요?
+A. 파티클 개수·수명과 동시 애니메이션 수가 많아지면 CPU/GPU 부하가 커지므로 제한하거나 LOD를 고려해야 한다.
+B. 파티클과 애니메이션은 성능에 전혀 영향을 주지 않는다.
+C. 애니메이션은 항상 파티클보다 가볍다.
+D. 파티클 시스템은 배터리 소모와 무관하다.
+(정답: A)
+
 Q3. Transform 애니메이션과 스켈레탈 애니메이션의 차이는?
+A. Transform 애니메이션은 엔티티 전체의 위치/회전/스케일을 보간하고, 스켈레탈 애니메이션은 리깅된 모델의 개별 조인트(뼈대)를 움직인다.
+B. 둘은 동일한 기능이며 이름만 다르다.
+C. 스켈레탈 애니메이션은 파티클에만 적용된다.
+D. Transform 애니메이션은 visionOS에서 지원되지 않는다.
+(정답: A)
 ```
 
 ## 톤
