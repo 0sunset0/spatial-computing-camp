@@ -1,21 +1,24 @@
 ---
 name: day1-spatial-intro
-description: Day 1 of the Spatial Computing 7-day camp. Teaches Apple's spatial computing concept map (ARKit, RealityKit, visionOS, and how they relate), platform comparison basics, and generates a Day 1 study note plus a mini checkpoint quiz. Trigger this whenever the user runs /day1-spatial-intro, says they're starting the spatial computing camp, or asks for an intro/overview lesson on Apple spatial computing, ARKit vs RealityKit vs visionOS, or "day 1" of an AR/spatial learning plan. Always use this skill instead of a generic explanation when the user is clearly following the 7-day camp curriculum (day1 → day7).
+description: Day 1 of the Spatial Computing 7-day camp. Teaches Apple's spatial computing concept map (ARKit, RealityKit, visionOS, and how they relate) and platform comparison basics via a beginner-friendly, in-chat concept→code→quiz loop per concept (no note files generated). Trigger this whenever the user runs /day1-spatial-intro, says they're starting the spatial computing camp, or asks for an intro/overview lesson on Apple spatial computing, ARKit vs RealityKit vs visionOS, or "day 1" of an AR/spatial learning plan. Always use this skill instead of a generic explanation when the user is clearly following the 7-day camp curriculum (day1 → day7).
 ---
 
 # Day 1 — Spatial Computing 개론
 
 7일 커리큘럼의 첫째 날. 목표는 "Apple 생태계 안에서 spatial computing이 어떻게 조각나 있는지"에 대한 큰 그림을 잡아주는 것입니다. 개념 지도가 중심이지만, 다른 Day들과 동일하게 짧은 샘플 코드도 함께 보여줘서 "코드 예제로 학습 → 퀴즈 → 다음 스킬" 패턴을 Day 1부터 일관되게 유지합니다.
 
+## 진행 방식 (중요, 모든 Day 공통)
+
+- **노트/대시보드 파일을 만들지 않습니다.** `SpatialCampNotes/*.md`, `00-dashboard.md` 같은 파일을 생성하지 마세요. 모든 설명과 코드는 대화창 출력만으로 전달합니다.
+- **개념 하나 설명 → (코드가 있으면) 코드 설명 → 그 개념에 대응하는 퀴즈 1문항**을 곧바로 AskUserQuestion으로 진행하고, 이 사이클을 다음 개념으로 넘어가며 반복하세요. 모든 개념을 다 설명한 뒤에 퀴즈를 몰아서 내지 마세요.
+- **완전 초보자도 따라올 수 있게 설명하세요.** 전문 용어가 나오면 바로 정의하고, 비유를 적극 활용하세요.
+
 ## 이 스킬이 트리거되면 할 일
 
-1. **노트 폴더 확인/생성**: 현재 작업 폴더에 `SpatialCampNotes/`가 없으면 만드세요. 없다면 `SpatialCampNotes/00-dashboard.md`도 함께 생성합니다 (아래 대시보드 포맷 참고).
-2. **공식 문서 확인 (필수, 건너뛰지 말 것)**: 노트를 쓰기 전에 `web_search`로 아래 "핵심 개념"에 나온 프레임워크/개념에 대한 Apple 공식 문서(`developer.apple.com/documentation/arkit`, `.../realitykit`, `.../visionos`)를 찾고, `web_fetch`로 실제 내용을 확인하세요. 학습 데이터 시점과 달라진 부분(새 API, deprecated된 개념, 새 플랫폼 지원 등)이 있으면 노트에 반영하고 사용자에게도 짚어주세요.
-3. **Day 1 학습 노트 생성**: `SpatialCampNotes/day1-spatial-intro.md` 파일을 아래 "노트 구조"에 맞춰 작성합니다. 실제로 fetch한 공식 문서 URL을 "참고 자료" 섹션에 남기세요.
-4. **본문에도 핵심 요약과 "코드 예제" 섹션을 대화창에 출력**합니다 (파일만 만들고 끝내지 말 것 — 사용자가 바로 읽을 수 있어야 함).
-5. **체크포인트 퀴즈**로 마무리합니다 (아래 "퀴즈" 섹션).
-6. 퀴즈가 모두 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 2로 넘어간다고 안내합니다.
-7. 사용자가 "다음", "완료" 또는 이에 준하는 표현(예: 넘어가자, next, ㄱㄱ)으로 응답하면, `/day2-arkit-basics` 슬래시 명령을 다시 입력하라고 요구하지 말고 **Skill 도구로 `day2-arkit-basics`를 직접 호출**해 바로 이어서 진행하세요.
+1. **공식 문서 확인 (필수, 건너뛰지 말 것, 조용히 먼저 수행)**: `web_search`로 아래 "핵심 개념"에 나온 프레임워크/개념에 대한 Apple 공식 문서(`developer.apple.com/documentation/arkit`, `.../realitykit`, `.../visionos`)를 찾고, `web_fetch`로 실제 내용을 확인하세요. 학습 데이터 시점과 달라진 부분(새 API, deprecated된 개념, 새 플랫폼 지원 등)이 있으면 설명에 반영하고 사용자에게도 짚어주세요.
+2. **핵심 개념을 하나씩 순서대로**: 개념 설명 → 코드 예제 설명 → 그 개념에 대응하는 퀴즈 1문항(AskUserQuestion) → 피드백, 을 "다룰 핵심 개념"에 나열된 순서대로 반복합니다.
+3. 모든 개념+퀴즈가 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 2로 넘어간다고 안내합니다.
+4. 사용자가 "다음", "완료" 또는 이에 준하는 표현(예: 넘어가자, next, ㄱㄱ)으로 응답하면, `/day2-arkit-basics` 슬래시 명령을 다시 입력하라고 요구하지 말고 **Skill 도구로 `day2-arkit-basics`를 직접 호출**해 바로 이어서 진행하세요.
 
 ## 다룰 핵심 개념
 
@@ -53,44 +56,13 @@ arView.scene.addAnchor(anchor)
 
 두 코드를 나란히 보여주면서, `ARSession`/`ARWorldTrackingConfiguration`은 "트래킹 설정"이고 `ARView`/`AnchorEntity`/`ModelEntity`는 "렌더링 설정"이라는 계층 차이를 코드 모양으로도 확인시켜 주세요.
 
-## 노트 구조 (`day1-spatial-intro.md`)
-
-```markdown
-# Day 1: Spatial Computing 개론
-
-## 오늘의 목표
-(1~2문장)
-
-## 개념 지도
-(ARKit / RealityKit / visionOS / Reality Composer Pro 관계를 표 또는 인디언트 구조로)
-
-## 코드 예제
-(ARKit vs RealityKit 설정 코드 비교 스니펫)
-
-## 핵심 정리
-- 개념별 3줄 요약
-
-## 오늘의 한 줄 정리
-> (암기용 한 문장)
-
-## 체크포인트 퀴즈
-(아래 형식 그대로)
-
-## 참고 자료
-- (실제로 fetch한 Apple 공식 문서 URL들을 여기에 나열)
-
-## 다음 단계
-Day 2 — ARKit 기초로 이동: `/day2-arkit-basics`
-```
-
 ## 퀴즈
 
-이 3문제를 **객관식 4지선다**로, 한 번에 다 보여주지 말고 **한 문제씩** 진행하세요. **AskUserQuestion 도구를 사용해서 사용자가 방향키/클릭으로 보기 중 하나를 고를 수 있게 하세요** (대화창에 A~D 텍스트를 그냥 출력하고 타이핑으로 답하게 하지 마세요):
+아래 3문제는 각각 대응하는 개념 설명 **직후 바로** 진행하세요 (Q1→ARKit/RealityKit 역할 구분 개념 뒤, Q2→visionOS 인터랙션 개념 뒤, Q3→Reality Composer Pro 개념 뒤). 모든 개념 설명이 끝날 때까지 기다렸다가 한꺼번에 몰아서 내지 마세요. **객관식 4지선다**로, **AskUserQuestion 도구를 사용해서 사용자가 방향키/클릭으로 보기 중 하나를 고를 수 있게 하세요** (대화창에 A~D 텍스트를 그냥 출력하고 타이핑으로 답하게 하지 마세요):
 
-1. Q1을 AskUserQuestion으로 물어봅니다. `question`에는 문제 본문을, `options`에는 4개 보기를 `label`(짧게, 예: "A", "B"처럼 식별 가능하게 보기 핵심을 담아)과 `description`(보기 전문)으로 각각 담아 전달하세요. 정답을 먼저 알려주지 않습니다.
+1. 해당 개념 설명이 끝나면 그 자리에서 AskUserQuestion으로 물어봅니다. `question`에는 문제 본문을, `options`에는 4개 보기를 `label`(짧게, 예: "A", "B"처럼 식별 가능하게 보기 핵심을 담아)과 `description`(보기 전문)으로 각각 담아 전달하세요. 정답을 먼저 알려주지 않습니다.
 2. 사용자가 선택하면 정답 여부를 알려주되, 정답이든 오답이든 **왜 그런지, 다른 보기는 왜 아닌지**까지 피드백합니다 (단순 정오 통보로 끝내지 않기).
-3. 이어서 Q2 → AskUserQuestion → 피드백, 마지막으로 Q3도 동일하게 진행합니다.
-4. 세 문제가 모두 끝나면 다음 단계로 안내합니다.
+3. 피드백 후 바로 다음 개념 설명으로 넘어가고, 그 개념이 끝나면 다음 문제를 동일하게 진행합니다.
 
 아래 정답 표시는 채점 참고용이며 **AskUserQuestion의 옵션에는 넣지 말고, 사용자에게 먼저 노출하지도 마세요**:
 
@@ -117,24 +89,6 @@ D. Swift 코드를 자동 생성하는 컴파일러.
 (정답: B)
 ```
 
-## 대시보드 업데이트 (`00-dashboard.md`)
-
-없으면 새로 만들고, 있으면 Day 1 행을 갱신하세요:
-
-```markdown
-# Spatial Computing 7-Day Camp — 진행 대시보드
-
-| Day | 주제 | 상태 |
-|-----|------|------|
-| 1 | Spatial Computing 개론 | ✅ 완료 |
-| 2 | ARKit 기초 | ⬜ |
-| 3 | ARKit 심화 | ⬜ |
-| 4 | RealityKit 기초 | ⬜ |
-| 5 | RealityKit 심화 | ⬜ |
-| 6 | 상호작용/제스처 | ⬜ |
-| 7 | 미니 프로젝트 | ⬜ |
-```
-
 ## 톤
 
-이 시리즈를 쓰는 사람은 iOS/Java 백엔드 경험이 있는 개발자로 가정합니다 (완전 초보자용 설명 불필요). 개념을 아키텍처/설계 관점으로 설명하면 더 잘 와닿습니다.
+완전 초보자도 따라올 수 있게 설명하는 것을 우선하세요. 전문 용어는 등장할 때 바로 풀어서 정의하고, 비유를 적극 활용하세요. 이미 아는 개념이 있다면 아키텍처/설계 관점 설명을 덧붙여도 좋지만, 기본 설명 자체를 초보자 눈높이 아래로 생략하지 마세요.

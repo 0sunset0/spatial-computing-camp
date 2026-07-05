@@ -1,6 +1,6 @@
 ---
 name: day2-arkit-basics
-description: Day 2 of the Spatial Computing 7-day camp. Teaches ARKit fundamentals — world tracking, session configuration, plane detection, anchors, hit testing — with Swift code examples, then generates a Day 2 study note and checkpoint quiz. Trigger this when the user runs /day2-arkit-basics, has completed day1-spatial-intro and wants to continue, or asks about ARKit basics, ARSession, plane detection, or anchors in the context of the spatial computing camp.
+description: Day 2 of the Spatial Computing 7-day camp. Teaches ARKit fundamentals — world tracking, session configuration, plane detection, anchors, hit testing — via a beginner-friendly, in-chat concept→code→quiz loop per concept (no note files), then codes the real SpatialCampApp Xcode project. Trigger this when the user runs /day2-arkit-basics, has completed day1-spatial-intro and wants to continue, or asks about ARKit basics, ARSession, plane detection, or anchors in the context of the spatial computing camp.
 ---
 
 # Day 2 — ARKit 기초
@@ -18,20 +18,23 @@ description: Day 2 of the Spatial Computing 7-day camp. Teaches ARKit fundamenta
 - 빌드가 성공하면 무엇을 바꿨는지 diff 요약을 대화창에 설명하고, **실제 AR 동작(평면 감지, 오브젝트 배치 등)은 실기(아이폰/아이패드)에서 Xcode로 빌드·실행해야 확인 가능**하다는 점을 안내하세요 (시뮬레이터에서는 카메라 트래킹이 동작하지 않음).
 - **테스트 가이드는 콘솔 로그가 아니라 항상 대화창 + 앱 화면 텍스트로 준다**: Xcode 콘솔을 열어보라고 하지 말고, `ARStatusModel`(Day 2에서 생성)의 `statusText`를 통해 앱 화면 상단 배너에 "지금 뭘 해야 하는지 / 방금 뭐가 됐는지"가 실시간으로 보이도록 코드를 유지하세요. 매 Day 코드를 바꿀 때, 그 Day의 새 기능이 트리거되는 시점에 `status.statusText`를 그 기능에 맞는 안내 문구로 갱신하세요.
 
-## 트리거 시 할 일 (항상 이 순서: 개념 설명 → 코드 설명 → 프로젝트에 실제 코딩 → 퀴즈)
+## 진행 방식 (중요, 모든 Day 공통)
+
+- **노트/대시보드 파일을 만들지 않습니다.** `SpatialCampNotes/*.md`, `00-dashboard.md` 같은 파일을 생성하지 마세요. 설명은 전부 대화창 출력으로 전달합니다 (단, `SpatialCampApp/` 실제 프로젝트 코드 파일은 이 규칙과 무관하게 정상적으로 작성/수정합니다).
+- **개념 하나 설명 → 그 개념의 코드 설명 → 그 개념에 대응하는 퀴즈 1문항**을 AskUserQuestion으로 바로 진행하고, 다음 개념으로 넘어가며 반복하세요. 모든 개념을 다 설명한 뒤에 퀴즈를 몰아서 내지 마세요.
+- 개념+코드+퀴즈 루프가 "다룰 핵심 개념" 전부에 대해 끝난 뒤에 프로젝트에 실제로 코딩하는 단계로 넘어갑니다 (아래 순서 참고).
+- **완전 초보자도 따라올 수 있게 설명하세요.** 전문 용어가 나오면 바로 정의하고, 비유를 적극 활용하세요.
+
+## 트리거 시 할 일 (항상 이 순서: 개념→코드→퀴즈 반복 → 프로젝트에 실제 코딩)
 
 1. **공식 문서 확인 (필수, 조용히 먼저 수행)**: `web_search` + `web_fetch`로 `ARSession`, `ARWorldTrackingConfiguration`, `ARPlaneAnchor`, `raycast` 등 아래에 등장하는 API의 Apple 공식 문서(`developer.apple.com/documentation/arkit`)를 실제로 열어 최신 시그니처를 확인하세요. 아래 코드는 참고용 초안이며, 실제 API가 바뀌었다면 fetch한 내용 기준으로 코드를 수정하세요.
-2. **개념 설명**: 아래 "다룰 핵심 개념"을 대화창에 먼저 설명합니다 (아직 코드/파일 작업 시작 전).
-3. **코드 설명**: 아래 "코드 (실제로 작성)" 섹션의 코드를 대화창에 보여주며, 각 부분이 무엇을 하는지 짚어줍니다 (session 설정, 델리게이트, raycast, 박스 배치 등). 이 시점에는 아직 파일에 쓰지 않습니다.
-4. **프로젝트에 실제로 코딩**:
+2. **핵심 개념을 하나씩 순서대로**: 개념 설명 → 관련 코드 설명(아직 파일에 쓰지 않음) → 그 개념에 대응하는 퀴즈 1문항(AskUserQuestion) → 피드백, 을 "다룰 핵심 개념"에 나열된 순서대로 반복합니다.
+3. **프로젝트에 실제로 코딩** (모든 개념+퀴즈가 끝난 뒤):
    - `SpatialCampApp/project.yml`이 없다면(이 작업 폴더에서 처음 코딩) "프로젝트 최초 생성" 절차 수행: `project.yml`, `SpatialCampApp.swift`, `ARStatusModel.swift`, `ContentView.swift`, `ARViewContainer.swift` 생성 후 `ContentView.swift`가 `ARViewContainer()`와 상태 배너를 보여주도록 연결하고 `cd SpatialCampApp && xcodegen generate` 실행.
    - 이미 있다면 `ARViewContainer.swift`를 방금 설명한 코드로 수정/추가.
-5. `xcodebuild ... build`로 컴파일 검증 (위 "프로젝트 규칙" 참고). 성공/실패 결과를 대화창에 보고 (실패하면 사용자에게 보고하기 전에 먼저 고칠 것).
-6. `SpatialCampNotes/day2-arkit-basics.md` 생성 (Day 1과 동일한 폴더 관례; 폴더 없으면 새로 생성) — 위에서 설명한 개념/코드 내용을 담아서 작성.
-7. 체크포인트 퀴즈 진행.
-8. `00-dashboard.md`의 Day 2 상태를 ✅로 갱신.
-9. Day 1 노트가 없다면("처음 오는 사용자") 먼저 `/day1-spatial-intro`를 완료했는지 가볍게 확인하되, 막지는 말고 바로 진행해도 괜찮음.
-10. 퀴즈가 모두 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 3으로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day3-arkit-advanced` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day3-arkit-advanced`를 직접 호출**하세요.
+4. `xcodebuild ... build`로 컴파일 검증 (위 "프로젝트 규칙" 참고). 성공/실패 결과를 대화창에 보고 (실패하면 사용자에게 보고하기 전에 먼저 고칠 것).
+5. Day 1을 아직 안 했다는 정황이 보이면("처음 오는 사용자") 먼저 `/day1-spatial-intro`를 완료했는지 가볍게 확인하되, 막지는 말고 바로 진행해도 괜찮음.
+6. 모든 게 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 3으로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day3-arkit-advanced` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day3-arkit-advanced`를 직접 호출**하세요.
 
 ## project.yml 템플릿 (프로젝트 최초 생성 시에만 사용)
 
@@ -210,18 +213,13 @@ struct ARViewContainer: UIViewRepresentable {
 }
 ```
 
-## 노트 구조 (`day2-arkit-basics.md`)
-
-Day 1 노트와 동일한 스타일 유지: 오늘의 목표 → 핵심 개념 → 코드 스니펫 → 한 줄 정리 → 퀴즈 → **참고 자료(실제로 fetch한 공식 문서 URL)** → 다음 단계. 코드 블록은 반드시 ```swift로 감싸기.
-
 ## 퀴즈
 
-이 3문제를 **객관식 4지선다**로, 한 번에 다 보여주지 말고 **한 문제씩** 진행하세요. **AskUserQuestion 도구를 사용해서 사용자가 방향키/클릭으로 보기 중 하나를 고를 수 있게 하세요** (대화창에 A~D 텍스트를 그냥 출력하고 타이핑으로 답하게 하지 마세요):
+아래 3문제는 각각 대응하는 개념 설명 **직후 바로** 진행하세요 (Q1→ARConfiguration/평면 감지 설정 개념 뒤, Q2→Anchor/ARPlaneAnchor 개념 뒤, Q3→Raycasting 개념 뒤). 모든 개념 설명이 끝날 때까지 기다렸다가 한꺼번에 몰아서 내지 마세요. **객관식 4지선다**로, **AskUserQuestion 도구를 사용해서 사용자가 방향키/클릭으로 보기 중 하나를 고를 수 있게 하세요** (대화창에 A~D 텍스트를 그냥 출력하고 타이핑으로 답하게 하지 마세요):
 
-1. Q1을 AskUserQuestion으로 물어봅니다. `question`에는 문제 본문을, `options`에는 4개 보기를 `label`(짧게, 예: "A", "B"처럼 식별 가능하게 보기 핵심을 담아)과 `description`(보기 전문)으로 각각 담아 전달하세요. 정답을 먼저 알려주지 않습니다.
+1. 해당 개념 설명이 끝나면 그 자리에서 AskUserQuestion으로 물어봅니다. `question`에는 문제 본문을, `options`에는 4개 보기를 `label`(짧게, 예: "A", "B"처럼 식별 가능하게 보기 핵심을 담아)과 `description`(보기 전문)으로 각각 담아 전달하세요. 정답을 먼저 알려주지 않습니다.
 2. 사용자가 선택하면 정답 여부를 알려주되, 정답이든 오답이든 **왜 그런지, 다른 보기는 왜 아닌지**까지 피드백합니다 (단순 정오 통보로 끝내지 않기).
-3. 이어서 Q2 → AskUserQuestion → 피드백, 마지막으로 Q3도 동일하게 진행합니다.
-4. 세 문제가 모두 끝나면 다음 단계로 안내합니다.
+3. 피드백 후 바로 다음 개념 설명으로 넘어가고, 그 개념이 끝나면 다음 문제를 동일하게 진행합니다.
 
 아래 정답 표시는 채점 참고용이며 **AskUserQuestion의 옵션에는 넣지 말고, 사용자에게 먼저 노출하지도 마세요**:
 
@@ -254,4 +252,4 @@ D. raycast는 평면 감지가 꺼져 있어도 동작하기 때문이다.
 
 ## 톤
 
-Day 1과 동일하게 iOS 개발 경험이 있는 학습자 대상. Swift 문법 기초 설명은 생략하고 ARKit 고유 개념에 집중하세요.
+완전 초보자도 따라올 수 있게 설명하는 것을 우선하세요. 전문 용어는 등장할 때 바로 풀어서 정의하고, 비유를 적극 활용하세요. Swift 문법 자체보다 ARKit 고유 개념(왜 이렇게 동작하는지)에 집중하되, 코드 한 줄 한 줄이 무엇을 하는지는 건너뛰지 말고 짚어주세요.
