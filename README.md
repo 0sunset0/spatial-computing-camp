@@ -1,6 +1,6 @@
 # Spatial Computing 7-Day Camp
 
-Spatial Computing 입문자를 위한 7일짜리 spatial computing 학습 Skill 시리즈입니다. `tutor-skills`, `ai-native-camp/camp-1`(day1-onboarding, day2-... 구조)에서 영감을 받아 만들었습니다.
+Spatial Computing 입문자를 위한 7일짜리 spatial computing 학습 Skill 시리즈입니다. 
 
 ## 구성
 
