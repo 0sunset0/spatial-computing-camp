@@ -2,6 +2,17 @@
 
 Spatial Computing 입문자를 위한 7일짜리 spatial computing 학습 Skill 시리즈입니다. 
 
+## 필요 환경
+
+| 항목 | 요구 사항 |
+|---|---|
+| Xcode | 16 이상 (iOS 18 SDK 포함 — Day 5부터 `ParticleEmitterComponent`가 iOS 18을 요구) |
+| iOS 배포 타깃 | Day 2~4: iOS 17+, Day 5부터: iOS 18+ (스킬이 진행 중 `project.yml`을 자동으로 올려줌) |
+| xcodegen | 필수. `brew install xcodegen`으로 설치 |
+| 실기 기기 | 아이폰/아이패드 권장 (시뮬레이터는 ARKit 카메라 트래킹·제스처를 지원하지 않아 실제 동작 확인 불가). Day 3의 Scene Reconstruction(LiDAR)은 LiDAR 탑재 기기(Pro 계열)에서만 실제로 보임 |
+| 개발자 계정 | 무료 Apple ID로도 로컬 실기 빌드/서명 가능 (앱스토어 배포 아님) |
+| 에이전트 | Claude Code (또는 Skill/`AskUserQuestion` 도구를 지원하는 호환 에이전트) |
+
 ## 구성
 
 | Day | 명령어 | 주제 |
@@ -10,7 +21,7 @@ Spatial Computing 입문자를 위한 7일짜리 spatial computing 학습 Skill 
 | 2 | `/day2-arkit-basics` | ARKit 기초 (세션, 평면 감지, 앵커, 레이캐스트) — 실제 Xcode 프로젝트 시작 |
 | 3 | `/day3-arkit-advanced` | ARKit 심화 (People Occlusion, Face/Body Tracking, Scene Geometry) |
 | 4 | `/day4-realitykit-basics` | RealityKit 기초 (ECS, Entity/Component, PBR 머티리얼) |
-| 5 | `/day5-realitykit-advanced` | RealityKit 심화 (파티클, CoreHaptics) |
+| 5 | `/day5-realitykit-advanced` | RealityKit 심화 (파티클, Transform 애니메이션) — iOS 18+ 필요 |
 | 6 | `/day6-interaction-gesture` | 상호작용/제스처 (RealityKit 제스처, 충돌·물리, visionOS 인터랙션 모델) |
 | 7 | `/day7-mini-project` | 미니 프로젝트 — 필수 체크리스트 + 주제 자유 캡스톤 |
 
@@ -47,11 +58,11 @@ Day 2부터는 작업 폴더에 `SpatialCampApp/`이라는 실제 iOS 앱 프로
 - **Day 2**: `ARSession` + 평면 감지 + `raycast` 탭-투-플레이스 박스 배치 (베이스 앱).
 - **Day 3**: People Occlusion / Scene Reconstruction 설정 추가.
 - **Day 4**: 배치되는 오브젝트를 `PhysicallyBasedMaterial`로 업그레이드.
-- **Day 5**: 파티클(`ParticleEmitterComponent`) + CoreHaptics 진동 추가.
+- **Day 5**: 파티클(`ParticleEmitterComponent`) + Transform 애니메이션(팝인 효과) 추가 (배포 타깃을 iOS 18로 올림).
 - **Day 6**: 배치한 오브젝트에 드래그/회전/스케일 제스처와 충돌 이벤트 추가.
 - **Day 7**: 캡스톤 — 사용자가 고른 주제로 위 기능들을 조합/확장.
 
-매 Day마다 코드를 수정한 뒤 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 컴파일을 검증합니다. 단, ARKit 카메라 트래킹·햅틱·제스처 등 실제 동작은 시뮬레이터가 지원하지 않으므로, **실기(아이폰/아이패드)를 Xcode에 연결해 직접 빌드·실행**해야 확인할 수 있습니다.
+매 Day마다 코드를 수정한 뒤 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 컴파일을 검증합니다. 단, ARKit 카메라 트래킹·파티클·제스처 등 실제 동작은 시뮬레이터가 지원하지 않으므로, **실기(아이폰/아이패드)를 Xcode에 연결해 직접 빌드·실행**해야 확인할 수 있습니다.
 
 앱 화면 상단에는 `ARStatusModel` 기반 상태 배너가 떠서 "지금 뭘 하면 되는지 / 방금 뭐가 됐는지"를 실시간으로 보여줍니다 (예: "평면 감지됨! 화면을 탭해서 배치해보세요" → "배치 완료!"). 콘솔 로그를 따로 열어보지 않아도 화면만 보고 테스트할 수 있습니다.
 
