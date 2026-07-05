@@ -19,16 +19,19 @@ Day 2에서 만든 `SpatialCampApp/` 프로젝트(xcodegen 기반, `Sources/Spat
 ## 진행 방식 (중요, 모든 Day 공통)
 
 - **노트/대시보드 파일을 만들지 않습니다.** `SpatialCampNotes/*.md`, `00-dashboard.md` 같은 파일을 생성하지 마세요. 설명은 전부 대화창 출력으로 전달합니다 (단, `SpatialCampApp/` 실제 프로젝트 코드 파일은 이 규칙과 무관하게 정상적으로 작성/수정합니다).
-- **개념 하나 설명 → 그 개념의 코드 설명 → 그 개념에 대응하는 퀴즈 1문항**을 AskUserQuestion으로 바로 진행하고, 다음 개념으로 넘어가며 반복하세요. 모든 개념을 다 설명한 뒤에 퀴즈를 몰아서 내지 마세요.
+- **개념 설명 → 퀴즈 → 프로젝트 코드로 확인, 이 세 단계를 한 세트로 묶어서 반복하세요.** 개념 하나를 설명하고, 그 개념에 대응하는 퀴즈 1문항(AskUserQuestion)을 바로 진행하고, 피드백을 준 다음, **그 개념에 해당하는 코드만** 실제 프로젝트 파일에 반영해서 빌드로 확인한 뒤 다음 개념으로 넘어가세요. 모든 개념을 다 설명한 뒤에 퀴즈나 코드를 몰아서 하지 마세요.
+- **프로젝트 파일을 고치기 전에는 항상 "지금부터 무엇을, 왜 작성할지" 한두 문장으로 먼저 말하세요.** 코드를 한 번에 다 바꿔치기 하고 나서 보고하지 말고, 작은 단위로 나눠서 하나씩 진행하세요.
 - **완전 초보자도 따라올 수 있게 설명하세요.** 전문 용어가 나오면 바로 정의하고, 비유를 적극 활용하세요.
 
-## 트리거 시 할 일 (항상 이 순서: 개념→코드→퀴즈 반복 → 프로젝트에 실제 코딩)
+## 트리거 시 할 일 (항상 이 순서: [개념 → 퀴즈 → 코드로 확인]을 개념별로 반복)
 
 1. **공식 문서 확인 (필수, 조용히 먼저 수행)**: `web_search` + `web_fetch`로 People Occlusion(`ARFrame.SegmentationBuffer`, `frameSemantics = .personSegmentationWithDepth`), Face Tracking(`ARFaceTrackingConfiguration`), Scene Reconstruction(`ARWorldTrackingConfiguration.sceneReconstruction`, LiDAR 관련) 관련 Apple 공식 문서를 실제로 열어 최신 API를 확인. 특히 이 영역은 기기 요구사항(LiDAR 유무 등)이 자주 바뀌므로 반드시 최신 문서 기준으로 확인할 것.
-2. **핵심 개념을 하나씩 순서대로**: 개념 설명 → 관련 코드 설명(아직 파일에 쓰지 않음) → 그 개념에 대응하는 퀴즈 1문항(AskUserQuestion) → 피드백, 을 "다룰 핵심 개념"에 나열된 순서대로 반복합니다.
-3. **프로젝트에 실제로 코딩** (모든 개념+퀴즈가 끝난 뒤): `ARViewContainer.swift`를 열어 설명한 내용을 `configuration` 블록에 반영. `SpatialCampApp/`이 없다면(Day 2를 건너뛴 경우) `/day2-arkit-basics`를 완료했는지 확인하되, 막지는 말고 없으면 최소한의 베이스부터 만들고 이어가도 괜찮습니다.
-4. `xcodebuild ... build`로 컴파일 검증 (위 "프로젝트 규칙" 참고). 성공/실패를 대화창에 보고.
-5. 모든 게 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 4로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day4-realitykit-basics` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day4-realitykit-basics`를 직접 호출**하세요.
+2. `SpatialCampApp/`이 없다면(Day 2를 건너뛴 경우) `/day2-arkit-basics`를 완료했는지 확인하되, 막지는 말고 없으면 최소한의 베이스부터 만들고 이어가도 괜찮습니다.
+3. **개념 1 — People Occlusion (+ Face/Body Tracking 개요)**: 개념 설명 → 퀴즈 1(AskUserQuestion) → 피드백 → "이제 People Occlusion 설정을 추가하겠습니다"라고 말한 뒤 `ARViewContainer.swift`의 `configuration` 블록에 `frameSemantics.insert(.personSegmentationWithDepth)` 부분만 추가 → `xcodebuild ... build`로 확인.
+4. **개념 2 — Scene Geometry / LiDAR**: 개념 설명 → 퀴즈 2 → 피드백 → "이제 Scene Reconstruction(LiDAR mesh) 설정을 추가하겠습니다"라고 말한 뒤 `sceneReconstruction = .mesh` 설정 + `arView.debugOptions.insert(.showSceneUnderstanding)` 부분만 추가 → `xcodebuild ... build`로 확인.
+5. **개념 3 — 성능 튜닝**: 개념 설명 → 퀴즈 3 → 피드백 → 새 코드를 추가하기보다, 지금까지 켠 옵션들(occlusion + scene reconstruction)을 함께 훑어보며 "무엇을 껐다 켜면 성능에 영향이 있는지" 짚어주고, `handleTap`의 완료 안내 문구를 occlusion 테스트용으로 바꾼 뒤 최종 `xcodebuild ... build`로 확인.
+6. 성공/실패를 대화창에 보고 (실패하면 사용자에게 보고하기 전에 먼저 고칠 것).
+7. 모든 게 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 4로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day4-realitykit-basics` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day4-realitykit-basics`를 직접 호출**하세요.
 
 ## 다룰 핵심 개념
 
@@ -39,6 +42,8 @@ Day 2에서 만든 `SpatialCampApp/` 프로젝트(xcodegen 기반, `Sources/Spat
 - **성능 튜닝**: 세션 구성 시 불필요한 semantics를 켜지 않기, `ARSession` 델리게이트 콜백에서 무거운 작업 피하기, 프레임 드랍 디버깅 방법(Xcode의 AR 디버깅 도구 언급).
 
 ## 코드 (실제로 작성 — `Sources/SpatialCampApp/ARViewContainer.swift`의 `configuration` 블록에 추가)
+
+아래는 완성된 전체 코드입니다. **한 번에 다 쓰지 말고** 위 "트리거 시 할 일"에서 설명한 대로 나눠서 작성하세요: (1) `frameSemantics.insert(.personSegmentationWithDepth)` 부분 → (2) `sceneReconstruction = .mesh` + `showSceneUnderstanding` 부분.
 
 ```swift
 let configuration = ARWorldTrackingConfiguration()

@@ -18,16 +18,18 @@ description: Day 4 of the Spatial Computing 7-day camp. Teaches RealityKit funda
 ## 진행 방식 (중요, 모든 Day 공통)
 
 - **노트/대시보드 파일을 만들지 않습니다.** `SpatialCampNotes/*.md`, `00-dashboard.md` 같은 파일을 생성하지 마세요. 설명은 전부 대화창 출력으로 전달합니다 (단, `SpatialCampApp/` 실제 프로젝트 코드 파일은 이 규칙과 무관하게 정상적으로 작성/수정합니다).
-- **개념 하나 설명 → 그 개념의 코드 설명 → 그 개념에 대응하는 퀴즈 1문항**을 AskUserQuestion으로 바로 진행하고, 다음 개념으로 넘어가며 반복하세요. 모든 개념을 다 설명한 뒤에 퀴즈를 몰아서 내지 마세요.
+- **개념 설명 → 퀴즈 → 프로젝트 코드로 확인, 이 세 단계를 한 세트로 묶어서 반복하세요.** 개념 하나를 설명하고, 그 개념에 대응하는 퀴즈 1문항(AskUserQuestion)을 바로 진행하고, 피드백을 준 다음, **그 개념에 해당하는 코드만** 실제 프로젝트 파일에 반영해서 빌드로 확인한 뒤 다음 개념으로 넘어가세요. 모든 개념을 다 설명한 뒤에 퀴즈나 코드를 몰아서 하지 마세요.
+- **프로젝트 파일을 고치기 전에는 항상 "지금부터 무엇을, 왜 작성할지" 한두 문장으로 먼저 말하세요.** `handleTap` 전체를 한 번에 갈아엎지 말고, 아래 3단계로 나눠서 조금씩 바꾸세요.
 - **완전 초보자도 따라올 수 있게 설명하세요.** 전문 용어가 나오면 바로 정의하고, 비유를 적극 활용하세요.
 
-## 트리거 시 할 일 (항상 이 순서: 개념→코드→퀴즈 반복 → 프로젝트에 실제 코딩)
+## 트리거 시 할 일 (항상 이 순서: [개념 → 퀴즈 → 코드로 확인]을 개념별로 반복)
 
 1. **공식 문서 확인 (필수, 조용히 먼저 수행)**: `web_search` + `web_fetch`로 `Entity`, `Component`, `ModelComponent`, `AnchorEntity`, `RealityKit` 머티리얼(`PhysicallyBasedMaterial` 등) 관련 Apple 공식 문서(`developer.apple.com/documentation/realitykit`)를 실제로 열어 최신 API로 확인.
-2. **핵심 개념을 하나씩 순서대로**: 개념 설명 → 관련 코드 설명(ECS 구조가 어떻게 조립되는지, 아직 파일에 쓰지 않음) → 그 개념에 대응하는 퀴즈 1문항(AskUserQuestion) → 피드백, 을 "다룰 핵심 개념"에 나열된 순서대로 반복합니다.
-3. **프로젝트에 실제로 코딩** (모든 개념+퀴즈가 끝난 뒤): `handleTap`에서 박스를 배치하던 `SimpleMaterial` 부분을 설명한 `PhysicallyBasedMaterial` 코드로 교체.
-4. `xcodebuild ... build`로 컴파일 검증 (위 "프로젝트 규칙" 참고). 성공/실패를 대화창에 보고.
-5. 모든 게 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 5로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day5-realitykit-advanced` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day5-realitykit-advanced`를 직접 호출**하세요.
+2. **개념 1 — ECS(Entity/Component/System)**: 개념 설명 → 퀴즈 1(AskUserQuestion) → 피드백 → "이제 박스의 mesh를 별도 변수로 분리해서 Entity가 어떻게 조립되는지 보여드리겠습니다"라고 말한 뒤 `handleTap`에서 `let mesh = MeshResource.generateBox(size: 0.1)`을 분리하고 `ModelEntity(mesh:, materials:)`로 조립하는 부분만 반영(재질은 아직 기존 `SimpleMaterial` 유지) → `xcodebuild ... build`로 확인.
+3. **개념 2 — 머티리얼(SimpleMaterial vs PhysicallyBasedMaterial)**: 개념 설명 → 퀴즈 2 → 피드백 → "이제 재질을 PhysicallyBasedMaterial로 바꾸겠습니다"라고 말한 뒤 `material` 변수(`baseColor`/`roughness`/`metallic`)를 추가하고 `ModelEntity`가 이 재질을 쓰도록 교체 → `xcodebuild ... build`로 확인.
+4. **개념 3 — AnchorEntity와 씬 계층 구조**: 개념 설명 → 퀴즈 3 → 피드백 → "이제 이 엔티티가 실제 공간 앵커에 어떻게 연결되는지 확인해보겠습니다"라고 말한 뒤 기존 `AnchorEntity(world:)` → `addChild` → `scene.addAnchor` 흐름을 대화창에서 짚어주며 필요하면 다듬고 → 최종 `xcodebuild ... build`로 확인.
+5. 성공/실패를 대화창에 보고 (실패하면 사용자에게 보고하기 전에 먼저 고칠 것).
+6. 모든 게 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 5로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day5-realitykit-advanced` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day5-realitykit-advanced`를 직접 호출**하세요.
 
 ## 다룰 핵심 개념
 
@@ -39,6 +41,8 @@ description: Day 4 of the Spatial Computing 7-day camp. Teaches RealityKit funda
 - **씬 계층 구조**: `AnchorEntity`를 루트로 자식 엔티티들을 붙여나가는 트리 구조.
 
 ## 코드 (실제로 작성 — `ARViewContainer.swift`의 `handleTap` 내부 박스 배치 부분을 교체)
+
+아래는 완성된 전체 코드입니다. **한 번에 다 쓰지 말고** 위 "트리거 시 할 일"에서 설명한 대로 3단계로 나눠서 작성하세요: (1) `mesh`/`modelEntity` 분리(재질은 기존 것 유지) → (2) `material`(PhysicallyBasedMaterial) 도입 → (3) `AnchorEntity`/씬 연결 확인.
 
 ```swift
 @objc func handleTap(_ recognizer: UITapGestureRecognizer) {

@@ -19,16 +19,20 @@ description: Day 5 of the Spatial Computing 7-day camp. Teaches advanced Reality
 ## 진행 방식 (중요, 모든 Day 공통)
 
 - **노트/대시보드 파일을 만들지 않습니다.** `SpatialCampNotes/*.md`, `00-dashboard.md` 같은 파일을 생성하지 마세요. 설명은 전부 대화창 출력으로 전달합니다 (단, `SpatialCampApp/` 실제 프로젝트 코드 파일은 이 규칙과 무관하게 정상적으로 작성/수정합니다).
-- **개념 하나 설명 → 그 개념의 코드 설명 → 그 개념에 대응하는 퀴즈 1문항**을 AskUserQuestion으로 바로 진행하고, 다음 개념으로 넘어가며 반복하세요. 모든 개념을 다 설명한 뒤에 퀴즈를 몰아서 내지 마세요.
+- **개념 설명 → 퀴즈 → 프로젝트 코드로 확인, 이 세 단계를 한 세트로 묶어서 반복하세요.** 개념을 설명하고, 대응하는 퀴즈 1문항(AskUserQuestion)을 바로 진행하고, 피드백을 준 다음, **그 개념에 해당하는 코드만** 실제 프로젝트 파일에 반영해서 빌드로 확인한 뒤 다음으로 넘어가세요. 모든 개념을 다 설명한 뒤에 퀴즈나 코드를 몰아서 하지 마세요.
+- **프로젝트 파일을 고치기 전에는 항상 "지금부터 무엇을, 왜 작성할지" 한두 문장으로 먼저 말하세요.** 코드를 큰 덩어리로 한 번에 다 넣지 말고, 작은 단위로 나눠서 하나씩 진행하세요.
 - **완전 초보자도 따라올 수 있게 설명하세요.** 전문 용어가 나오면 바로 정의하고, 비유를 적극 활용하세요.
 
-## 트리거 시 할 일 (항상 이 순서: 개념→코드→퀴즈 반복 → 프로젝트에 실제 코딩)
+## 트리거 시 할 일 (항상 이 순서: [개념 → 퀴즈 → 코드로 확인]을 개념별로 반복)
 
 1. **공식 문서 확인 (필수, 조용히 먼저 수행)**: `web_search` + `web_fetch`로 `ParticleEmitterComponent`, RealityKit 애니메이션(`Transform` 애니메이션, `AnimationResource`), `CoreHaptics`(`CHHapticEngine`) 관련 Apple 공식 문서를 실제로 열어 최신 API로 확인. RealityKit 파티클 API는 상대적으로 최근에 추가된 영역이라 특히 최신 문서 확인이 중요함을 유의.
-2. **핵심 개념을 하나씩 순서대로**: 개념 설명 → 관련 코드 설명(파티클/애니메이션/CoreHaptics 코드, 아직 파일에 쓰지 않음) → 그 개념에 대응하는 퀴즈 1문항(AskUserQuestion) → 피드백, 을 "다룰 핵심 개념"에 나열된 순서대로 반복합니다.
-3. **프로젝트에 실제로 코딩** (모든 개념+퀴즈가 끝난 뒤): `ARViewContainer.swift`에 설명한 내용을 반영 (`import CoreHaptics` 추가, 햅틱 엔진 프로퍼티/메서드 추가, `handleTap`에 파티클+햅틱 트리거 추가).
-4. `xcodebuild ... build`로 컴파일 검증 (위 "프로젝트 규칙" 참고). 성공/실패를 대화창에 보고.
-5. 모든 게 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 6으로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day6-interaction-gesture` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day6-interaction-gesture`를 직접 호출**하세요.
+2. **개념 1 — 파티클 + CoreHaptics + 동기화 패턴**: ParticleEmitterComponent, CoreHaptics 연동, "왜 둘의 타이밍을 맞춰야 하는지"를 함께 설명 → 퀴즈 1(AskUserQuestion) → 피드백 → 코드는 두 단계로 나눠 반영:
+   a. "먼저 CoreHaptics 임포트와 햅틱 엔진 설정부터 추가하겠습니다"라고 말한 뒤 `import CoreHaptics` + `Coordinator`의 햅틱 엔진 프로퍼티/`prepareHaptics()`/`playPlacementHaptic()` 메서드 + `makeUIView`에서 `prepareHaptics()` 호출을 추가 → `xcodebuild ... build`로 확인.
+   b. "이제 파티클 컴포넌트와 햅틱 트리거를 함께 추가하겠습니다"라고 말한 뒤 `handleTap`에 `ParticleEmitterComponent` 설정 + `playPlacementHaptic()` 호출 + 상태 문구 갱신을 추가 → `xcodebuild ... build`로 확인.
+3. **개념 2 — 성능 튜닝**: 개념 설명 → 퀴즈 2 → 피드백 → 새 기능을 추가하기보다, 방금 넣은 `birthRate`/`lifeSpan` 값을 함께 검토하며 "파티클·애니메이션이 많아지면 왜 부하가 커지는지" 짚어주고 필요하면 값을 조정 → `xcodebuild ... build`로 확인.
+4. **개념 3 — 애니메이션(Transform vs 스켈레탈)**: 개념 설명 → 퀴즈 3 → 피드백. 이 프로젝트에는 아직 애니메이션 코드를 추가하지 않으니(향후 확장 여지로 언급), 코드 변경 없이 최종 `xcodebuild ... build`로 전체 컴파일을 한 번 더 확인.
+5. 성공/실패를 대화창에 보고 (실패하면 사용자에게 보고하기 전에 먼저 고칠 것).
+6. 모든 게 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 6으로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day6-interaction-gesture` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day6-interaction-gesture`를 직접 호출**하세요.
 
 ## 다룰 핵심 개념
 
@@ -38,6 +42,8 @@ description: Day 5 of the Spatial Computing 7-day camp. Teaches advanced Reality
 - **동기화 패턴**: "파티클 시작 시점 + 햅틱 트리거 시점"을 맞추는 것이 체감 품질에 큰 영향을 준다는 설계 관점 강조 (ZupZup에서 노을님이 실제로 다룬 영역).
 
 ## 코드 (실제로 작성 — `ARViewContainer.swift`)
+
+아래는 완성된 전체 코드입니다. **한 번에 다 쓰지 말고** 위 "트리거 시 할 일"의 2a → 2b 순서로 나눠서 작성하세요.
 
 파일 상단 import에 `CoreHaptics` 추가:
 
