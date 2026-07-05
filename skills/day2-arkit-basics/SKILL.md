@@ -21,7 +21,8 @@ description: Day 2 of the Spatial Computing 7-day camp. Teaches ARKit fundamenta
 ## 진행 방식 (중요, 모든 Day 공통)
 
 - **노트/대시보드 파일을 만들지 않습니다.** `SpatialCampNotes/*.md`, `00-dashboard.md` 같은 파일을 생성하지 마세요. 설명은 전부 대화창 출력으로 전달합니다 (단, `SpatialCampApp/` 실제 프로젝트 코드 파일은 이 규칙과 무관하게 정상적으로 작성/수정합니다).
-- **개념 설명 → 퀴즈 → 프로젝트 코드로 확인, 이 세 단계를 한 세트로 묶어서 "다룰 핵심 개념" 순서대로 반복하세요.** 개념 하나를 설명하고, 그 개념에 대응하는 퀴즈 1문항(AskUserQuestion)을 바로 진행하고, 피드백을 준 다음, **그 개념에 해당하는 코드만** 실제 프로젝트 파일에 반영해서 빌드로 확인한 뒤 다음 개념으로 넘어가세요. 모든 개념을 다 설명한 뒤에 퀴즈나 코드를 몰아서 하지 마세요.
+- **개념 설명 → 퀴즈 → 프로젝트 코드로 확인, 이 세 단계를 한 세트로 묶어서 "다룰 핵심 개념" 순서대로 반복하세요.** 개념 하나를 설명하고, 그 개념에 대응하는 퀴즈 1문항(AskUserQuestion)을 바로 진행하고, 피드백을 준 다음, **그 개념에 해당하는 코드만** 실제 프로젝트 파일에 반영하고 `xcodebuild`로 컴파일까지 확인하세요. 모든 개념을 다 설명한 뒤에 퀴즈나 코드를 몰아서 하지 마세요.
+- **컴파일 성공만으로 다음 개념으로 넘어가지 마세요.** 시뮬레이터 빌드가 성공하면, 사용자에게 "실기(아이폰/아이패드)에서 Xcode로 직접 빌드·실행해서 이 기능이 실제로 동작하는지 확인해보세요"라고 안내하고, 사용자가 빌드해봤는지·어떻게 됐는지 답할 때까지 기다리세요. 사용자가 답하면(성공했든 에러가 났든) 그 응답을 반영하고 나서 다음 개념으로 넘어가세요.
 - **프로젝트 파일을 만들거나 고치기 전에는 항상 "지금부터 무엇을, 왜 작성할지" 한두 문장으로 먼저 말하세요.** 여러 파일이나 큰 코드 블록을 한 번에 다 만들어 놓고 나서 보고하지 말고, 작은 단위로 나눠서 "이거 만들겠습니다" → 실제 작성 → 결과 확인, 순서로 하나씩 진행하세요.
 - **완전 초보자도 따라올 수 있게 설명하세요.** 전문 용어가 나오면 바로 정의하고, 비유를 적극 활용하세요.
 
@@ -31,7 +32,7 @@ description: Day 2 of the Spatial Computing 7-day camp. Teaches ARKit fundamenta
 2. **프로젝트 스캐폴딩 (처음 코딩하는 경우만)**: `SpatialCampApp/project.yml`이 없다면, "먼저 프로젝트 뼈대를 만들겠습니다"라고 안내한 뒤 `project.yml` → `SpatialCampApp.swift`(앱 진입점) → `ARStatusModel.swift`(상태 모델) → `ContentView.swift`(화면+배너) 순서로, **파일 하나씩 무엇을 만드는지 말하고 나서** 생성하세요. `ARViewContainer.swift`는 아직 만들지 않습니다 — 그 로직은 아래 개념 루프에서 하나씩 채웁니다. 이미 프로젝트가 있다면 이 단계는 건너뜁니다.
 3. **개념 1 — ARSession/ARConfiguration/월드 트래킹**: 개념 설명 → 퀴즈 1(AskUserQuestion) → 피드백 → "이제 ARView와 세션 설정 코드를 작성하겠습니다"라고 말한 뒤 `ARViewContainer.swift`를 만들고(또는 있으면 수정) `configuration` 설정 + `session.run` + 델리게이트 등록 부분만 작성 → `cd SpatialCampApp && xcodegen generate`(새 파일이므로 필요) → `xcodebuild ... build`로 확인.
 4. **개념 2 — Anchor/ARPlaneAnchor**: 개념 설명 → 퀴즈 2 → 피드백 → "이제 평면 감지를 감시하는 델리게이트 메서드를 추가하겠습니다"라고 말한 뒤 `session(_:didAdd:)` 메서드만 추가 → `xcodebuild ... build`로 확인.
-5. **개념 3 — 히트 테스트/Raycasting**: 개념 설명 → 퀴즈 3 → 피드백 → "이제 탭한 위치에 오브젝트를 배치하는 코드를 추가하겠습니다"라고 말한 뒤 `handleTap` 함수(raycast + 박스 배치)만 추가 → `xcodebuild ... build`로 확인.
+5. **개념 3 — 히트 테스트/Raycasting**: 개념 설명 → 퀴즈 3 → 피드백 → "이제 탭한 위치에 오브젝트를 배치하는 코드를 추가하겠습니다"라고 말한 뒤 `handleTap` 함수(raycast + 구 오브젝트 배치)만 추가 → `xcodebuild ... build`로 확인.
 6. 세 개념 모두 끝나면 최종적으로 한 번 더 `xcodebuild ... build`로 전체 컴파일을 확인하고, 무엇을 바꿨는지 diff 요약을 대화창에 설명 (위 "프로젝트 규칙" 참고). 실패하면 사용자에게 보고하기 전에 먼저 고칠 것.
 7. Day 1을 아직 안 했다는 정황이 보이면("처음 오는 사용자") 먼저 `/day1-spatial-intro`를 완료했는지 가볍게 확인하되, 막지는 말고 바로 진행해도 괜찮음.
 8. 모든 게 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 3으로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day3-arkit-advanced` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day3-arkit-advanced`를 직접 호출**하세요.
@@ -127,7 +128,7 @@ struct ContentView: View {
 
 ## 코드 (실제로 작성 — `Sources/SpatialCampApp/ARViewContainer.swift`)
 
-Day 2는 아직 RealityKit을 본격적으로 다루지 않지만(그건 Day 4), 탭했을 때 뭔가 눈에 보여야 실기에서 확인하는 의미가 있으므로 최소한의 박스만 배치합니다. 재질/조명 등은 Day 4에서 제대로 다룬다고 안내하세요.
+Day 2는 아직 RealityKit을 본격적으로 다루지 않지만(그건 Day 4), 탭했을 때 뭔가 눈에 보여야 실기에서 확인하는 의미가 있으므로 최소한의 구 오브젝트만 배치합니다 (큐브가 아니라 구를 쓰는 이유는 Day 4에서 재질/조명을 다룰 때 설명합니다 — 평평한 면보다 둥근 면이 하이라이트가 잘 보여서입니다). 재질/조명 등은 Day 4에서 제대로 다룬다고 안내하세요.
 
 아래는 완성된 전체 코드입니다. **한 번에 다 쓰지 말고** 위 "트리거 시 할 일"에서 설명한 대로 3단계로 나눠서 작성하세요: (1) `makeUIView`의 `configuration`/`session.run`/델리게이트 등록 + 제스처 등록 부분 → (2) `session(_:didAdd:)` 델리게이트 메서드 → (3) `handleTap` 함수.
 
@@ -203,10 +204,10 @@ struct ARViewContainer: UIViewRepresentable {
                 return
             }
 
-            // Day 4에서 이 박스를 제대로 된 RealityKit 엔티티/머티리얼로 다듬습니다.
+            // Day 4에서 이 오브젝트를 제대로 된 RealityKit 엔티티/머티리얼로 다듬습니다.
             let anchorEntity = AnchorEntity(world: firstResult.worldTransform)
-            let box = ModelEntity(mesh: .generateBox(size: 0.1), materials: [SimpleMaterial(color: .systemBlue, isMetallic: false)])
-            anchorEntity.addChild(box)
+            let sphere = ModelEntity(mesh: .generateSphere(radius: 0.05), materials: [SimpleMaterial(color: .systemBlue, isMetallic: false)])
+            anchorEntity.addChild(sphere)
             arView.scene.addAnchor(anchorEntity)
 
             status.statusText = "배치 완료! 오브젝트가 공간에 고정되어 있는지 폰을 움직이며 확인해보세요"
