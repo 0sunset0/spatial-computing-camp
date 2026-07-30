@@ -17,6 +17,7 @@ description: Day 2 of the Spatial Computing 7-day camp. Teaches ARKit fundamenta
 - 코드를 작성/수정한 뒤에는 반드시 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 **컴파일이 되는지 확인**하세요 (시뮬레이터는 ARKit 카메라 트래킹을 지원하지 않지만 컴파일 검증에는 충분합니다). `BUILD SUCCEEDED`가 나올 때까지 고치고, 실패하면 사용자에게 보여주기 전에 먼저 원인을 고치세요.
 - 빌드가 성공하면 무엇을 바꿨는지 diff 요약을 대화창에 설명하고, **실제 AR 동작(평면 감지, 오브젝트 배치 등)은 실기(아이폰/아이패드)에서 Xcode로 빌드·실행해야 확인 가능**하다는 점을 안내하세요 (시뮬레이터에서는 카메라 트래킹이 동작하지 않음).
 - **테스트 가이드는 콘솔 로그가 아니라 항상 대화창 + 앱 화면 텍스트로 준다**: Xcode 콘솔을 열어보라고 하지 말고, `ARStatusModel`(Day 2에서 생성)의 `statusText`를 통해 앱 화면 상단 배너에 "지금 뭘 해야 하는지 / 방금 뭐가 됐는지"가 실시간으로 보이도록 코드를 유지하세요. 매 Day 코드를 바꿀 때, 그 Day의 새 기능이 트리거되는 시점에 `status.statusText`를 그 기능에 맞는 안내 문구로 갱신하세요.
+- **코드 작성 시 설명 주석을 함께 남깁니다.** 새로 작성하거나 수정하는 Swift 코드 줄/블록마다, 그게 무엇을 하는지·왜 이렇게 쓰는지 설명하는 한국어 주석을 함께 답니다. 이 캠프는 학습용 자료라서 "자명한 코드엔 주석을 달지 않는다"는 일반적인 클린코드 관례의 예외입니다 — 완전 초보자가 나중에 대화 내용 없이 코드만 다시 봐도 이해할 수 있게 하는 게 목적입니다.
 
 ## 진행 방식 (중요, 모든 Day 공통)
 
@@ -29,10 +30,10 @@ description: Day 2 of the Spatial Computing 7-day camp. Teaches ARKit fundamenta
 ## 트리거 시 할 일 (항상 이 순서: [개념 → 퀴즈 → 코드로 확인]을 개념별로 반복)
 
 1. **공식 문서 확인 (필수, 조용히 먼저 수행)**: `web_search` + `web_fetch`로 `ARSession`, `ARWorldTrackingConfiguration`, `ARPlaneAnchor`, `raycast` 등 아래에 등장하는 API의 Apple 공식 문서(`developer.apple.com/documentation/arkit`)를 실제로 열어 최신 시그니처를 확인하세요. 아래 코드는 참고용 초안이며, 실제 API가 바뀌었다면 fetch한 내용 기준으로 코드를 수정하세요.
-2. **프로젝트 스캐폴딩 (처음 코딩하는 경우만)**: `SpatialCampApp/project.yml`이 없다면, "먼저 프로젝트 뼈대를 만들겠습니다"라고 안내한 뒤 `project.yml` → `SpatialCampApp.swift`(앱 진입점) → `ARStatusModel.swift`(상태 모델) → `ContentView.swift`(화면+배너) 순서로, **파일 하나씩 무엇을 만드는지 말하고 나서** 생성하세요. `ARViewContainer.swift`는 아직 만들지 않습니다 — 그 로직은 아래 개념 루프에서 하나씩 채웁니다. 이미 프로젝트가 있다면 이 단계는 건너뜁니다.
-3. **개념 1 — ARSession/ARConfiguration/월드 트래킹**: 개념 설명 → 퀴즈 1(AskUserQuestion) → 피드백 → "이제 ARView와 세션 설정 코드를 작성하겠습니다"라고 말한 뒤 `ARViewContainer.swift`를 만들고(또는 있으면 수정) `configuration` 설정 + `session.run` + 델리게이트 등록 부분만 작성 → `cd SpatialCampApp && xcodegen generate`(새 파일이므로 필요) → `xcodebuild ... build`로 확인.
-4. **개념 2 — Anchor/ARPlaneAnchor**: 개념 설명 → 퀴즈 2 → 피드백 → "이제 평면 감지를 감시하는 델리게이트 메서드를 추가하겠습니다"라고 말한 뒤 `session(_:didAdd:)` 메서드만 추가 → `xcodebuild ... build`로 확인.
-5. **개념 3 — 히트 테스트/Raycasting**: 개념 설명 → 퀴즈 3 → 피드백 → "이제 탭한 위치에 오브젝트를 배치하는 코드를 추가하겠습니다"라고 말한 뒤 `handleTap` 함수(raycast + 구 오브젝트 배치)만 추가 → `xcodebuild ... build`로 확인.
+2. **프로젝트 스캐폴딩 (처음 코딩하는 경우만)**: `SpatialCampApp/project.yml`이 없다면, "먼저 프로젝트 뼈대를 만들겠습니다"라고 안내한 뒤 `project.yml` → `SpatialCampApp.swift`(앱 진입점) → `ARStatusModel.swift`(상태 모델) → `ContentView.swift`(화면+배너) 순서로, **파일 하나씩 무엇을 만드는지 말하고 나서** 생성하세요. `ARViewContainer.swift`/`ARCoordinator.swift`는 아직 만들지 않습니다 — 그 로직은 아래 개념 루프에서 하나씩 채웁니다. 이미 프로젝트가 있다면 이 단계는 건너뜁니다.
+3. **개념 1 — ARSession/ARConfiguration/월드 트래킹**: 개념 설명 → 퀴즈 1(AskUserQuestion) → 피드백 → "이제 ARView와 세션 설정 코드를 작성하겠습니다"라고 말한 뒤 `ARViewContainer.swift`(SwiftUI ↔ UIKit 어댑터, `configuration` 설정 + `session.run` + 델리게이트/제스처 등록)와 `ARCoordinator.swift`(델리게이트 이벤트를 받는 `ARCoordinator` 클래스 — 이 단계에서는 빈 뼈대만)를 만들고(또는 있으면 수정) → `cd SpatialCampApp && xcodegen generate`(새 파일이므로 필요) → `xcodebuild ... build`로 확인.
+4. **개념 2 — Anchor/ARPlaneAnchor**: 개념 설명 → 퀴즈 2 → 피드백 → "이제 평면 감지를 감시하는 델리게이트 메서드를 추가하겠습니다"라고 말한 뒤 `ARCoordinator.swift`에 `session(_:didAdd:)` 메서드만 추가 → `xcodebuild ... build`로 확인.
+5. **개념 3 — 히트 테스트/Raycasting**: 개념 설명 → 퀴즈 3 → 피드백 → "이제 탭한 위치에 오브젝트를 배치하는 코드를 추가하겠습니다"라고 말한 뒤 `ARCoordinator.swift`에 `handleTap` 함수(raycast + 구 오브젝트 배치)만 추가 → `xcodebuild ... build`로 확인.
 6. 세 개념 모두 끝나면 최종적으로 한 번 더 `xcodebuild ... build`로 전체 컴파일을 확인하고, 무엇을 바꿨는지 diff 요약을 대화창에 설명 (위 "프로젝트 규칙" 참고). 실패하면 사용자에게 보고하기 전에 먼저 고칠 것.
 7. Day 1을 아직 안 했다는 정황이 보이면("처음 오는 사용자") 먼저 `/day1-spatial-intro`를 완료했는지 가볍게 확인하되, 막지는 말고 바로 진행해도 괜찮음.
 8. 모든 게 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 3으로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day3-arkit-advanced` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day3-arkit-advanced`를 직접 호출**하세요.
@@ -126,92 +127,127 @@ struct ContentView: View {
 - **앵커(Anchor)**: 실제 공간의 한 지점을 "고정"하는 개념. `ARAnchor`가 좌표계의 기준점 역할을 함 — 이후 RealityKit에서 콘텐츠를 붙이는 지점이 된다는 것을 강조 (Day 4 연결고리).
 - **히트 테스트 / Raycasting**: 화면 터치 좌표를 3D 공간의 실제 지점으로 변환하는 방법 (`ARSession.raycast(_:)`가 현재 권장 방식이고, 구식 `hitTest`는 deprecated임을 언급).
 
-## 코드 (실제로 작성 — `Sources/SpatialCampApp/ARViewContainer.swift`)
+## 코드 (실제로 작성 — 두 파일로 나눠서 작성)
 
 Day 2는 아직 RealityKit을 본격적으로 다루지 않지만(그건 Day 4), 탭했을 때 뭔가 눈에 보여야 실기에서 확인하는 의미가 있으므로 최소한의 구 오브젝트만 배치합니다 (큐브가 아니라 구를 쓰는 이유는 Day 4에서 재질/조명을 다룰 때 설명합니다 — 평평한 면보다 둥근 면이 하이라이트가 잘 보여서입니다). 재질/조명 등은 Day 4에서 제대로 다룬다고 안내하세요.
 
-아래는 완성된 전체 코드입니다. **한 번에 다 쓰지 말고** 위 "트리거 시 할 일"에서 설명한 대로 3단계로 나눠서 작성하세요: (1) `makeUIView`의 `configuration`/`session.run`/델리게이트 등록 + 제스처 등록 부분 → (2) `session(_:didAdd:)` 델리게이트 메서드 → (3) `handleTap` 함수.
+**두 파일로 분리하는 이유**: `ARViewContainer`(SwiftUI ↔ UIKit 어댑터, "설정 담당")와 `ARCoordinator`(델리게이트 이벤트를 받는 "반응 담당")는 역할이 달라서 파일도 분리합니다. 이렇게 하면 각 파일이 한 가지 책임만 갖게 되어 읽기 쉬워집니다. Day 3~7에서도 이 두 파일에 계속 코드가 추가되니, 새 코드가 "설정"이면 `ARViewContainer.swift`에, "이벤트/제스처 반응"이면 `ARCoordinator.swift`에 넣으세요.
+
+아래는 완성된 전체 코드입니다. **한 번에 다 쓰지 말고** 위 "트리거 시 할 일"에서 설명한 대로 3단계로 나눠서 작성하세요: (1) `ARViewContainer.swift`의 `makeUIView` 전체(`configuration`/`session.run`/델리게이트 등록 + 제스처 등록) + `ARCoordinator.swift`의 빈 뼈대(`init`만) → (2) `ARCoordinator.swift`에 `session(_:didAdd:)` 델리게이트 메서드 → (3) `ARCoordinator.swift`에 `handleTap` 함수.
+
+`Sources/SpatialCampApp/ARViewContainer.swift`:
 
 ```swift
 import SwiftUI
 import RealityKit
 import ARKit
 
+// UIViewRepresentable: UIKit 뷰(ARView)를 SwiftUI 안에 끼워 넣을 수 있게 해주는 어댑터 프로토콜
+// RealityKit의 ARView는 UIKit 클래스라서 SwiftUI가 직접 쓸 수 없기 때문에 필요함
 struct ARViewContainer: UIViewRepresentable {
+    // @ObservedObject: 이 객체를 밖(ContentView)에서 전달받아 구독만 함 (직접 생성하지 않음)
     @ObservedObject var status: ARStatusModel
 
+    // makeUIView: ARView를 "처음 만들 때" 딱 한 번만 실행됨
     func makeUIView(context: Context) -> ARView {
+        // 카메라 화면을 실제로 그려줄 뷰. frame: .zero여도 SwiftUI가 나중에 화면 크기에 맞춰 배치해줌
         let arView = ARView(frame: .zero)
 
+        // ARWorldTrackingConfiguration: 6DoF(위치+방향) 월드 트래킹 설정
+        // 카메라 이미지 + IMU(모션 센서) 데이터를 융합해 기기 위치를 추정함 (VIO)
         let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = [.horizontal, .vertical]
-        configuration.environmentTexturing = .automatic
-        arView.session.run(configuration)
-        arView.session.delegate = context.coordinator
+        configuration.planeDetection = [.horizontal, .vertical] // 바닥/책상(수평면)과 벽(수직면) 모두 감지
+        configuration.environmentTexturing = .automatic // 주변 환경을 반사 재질 등에 자동 반영
+        arView.session.run(configuration) // 이 설정으로 AR 세션 시작 — 여기서 iOS가 카메라 접근 권한을 요청함
+        arView.session.delegate = context.coordinator // 세션 이벤트(평면 감지 등)를 ARCoordinator가 받도록 등록
 
         // 디버그 시각화: 화면에 즉시 뭔가 보여서 트래킹이 실제로 동작 중인지 눈으로 확인할 수 있게 합니다.
         // .showFeaturePoints: 카메라가 인식한 특징점을 노란 점으로 표시 (폰을 움직이면 바로 보임)
         // .showAnchorOrigins: 배치된 앵커의 좌표축을 표시
         arView.debugOptions = [.showFeaturePoints, .showAnchorOrigins]
 
+        // 화면 탭을 감지해서 ARCoordinator.handleTap이 호출되도록 제스처 인식기 등록
         let tapGesture = UITapGestureRecognizer(
             target: context.coordinator,
-            action: #selector(Coordinator.handleTap(_:))
+            action: #selector(ARCoordinator.handleTap(_:))
         )
         arView.addGestureRecognizer(tapGesture)
-        context.coordinator.arView = arView
+        context.coordinator.arView = arView // handleTap 안에서 arView에 접근할 수 있도록 참조 저장
 
         return arView
     }
 
+    // updateUIView: SwiftUI 상태가 바뀔 때마다 호출되지만, 지금은 갱신할 게 없어서 비워둠
     func updateUIView(_ uiView: ARView, context: Context) {}
 
-    func makeCoordinator() -> Coordinator {
-        Coordinator(status: status)
+    // makeCoordinator: UIViewRepresentable이 UIKit 델리게이트 콜백을 받을 "중개자" 객체를 만듦
+    // ARCoordinator 클래스 본체는 읽기 편하도록 ARCoordinator.swift에 별도 파일로 분리되어 있음
+    func makeCoordinator() -> ARCoordinator {
+        ARCoordinator(status: status)
+    }
+}
+```
+
+`Sources/SpatialCampApp/ARCoordinator.swift`:
+
+```swift
+import UIKit
+import RealityKit
+import ARKit
+
+// ARCoordinator: ARViewContainer(UIViewRepresentable)가 UIKit 이벤트(델리게이트 콜백, 제스처 등)를
+// 받기 위한 중개자. ARSessionDelegate를 채택해서 ARKit이 보내는 이벤트(평면 감지 등)를 직접 받을 수 있음
+class ARCoordinator: NSObject, ARSessionDelegate {
+    weak var arView: ARView? // ARView를 강한 참조로 잡으면 순환 참조가 생길 수 있어 weak로 보관
+    let status: ARStatusModel
+    private var hasDetectedPlane = false // 배너 문구를 "최초 평면 감지 1회만" 바꾸기 위한 플래그
+
+    init(status: ARStatusModel) {
+        self.status = status
     }
 
-    class Coordinator: NSObject, ARSessionDelegate {
-        weak var arView: ARView?
-        let status: ARStatusModel
-        private var hasDetectedPlane = false
+    // ARKit이 새 앵커(예: 감지된 평면)를 추가할 때마다 자동으로 호출되는 델리게이트 메서드
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        for anchor in anchors {
+            // 추가된 앵커 중 "평면" 앵커만 골라냄 (다른 종류의 앵커는 무시)
+            guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
+            print("평면 감지됨: \(planeAnchor.alignment), 크기: \(planeAnchor.planeExtent)")
 
-        init(status: ARStatusModel) {
-            self.status = status
-        }
-
-        func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-            for anchor in anchors {
-                guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
-                print("평면 감지됨: \(planeAnchor.alignment), 크기: \(planeAnchor.planeExtent)")
-
-                if !hasDetectedPlane {
-                    hasDetectedPlane = true
-                    DispatchQueue.main.async { [weak self] in
-                        self?.status.statusText = "평면 감지됨! 화면을 탭해서 오브젝트를 배치해보세요"
-                    }
+            if !hasDetectedPlane {
+                hasDetectedPlane = true
+                // didAdd는 백그라운드 스레드에서 호출될 수 있어서, UI에 영향을 주는 @Published 값 변경은
+                // 반드시 메인 스레드에서 실행해야 함
+                DispatchQueue.main.async { [weak self] in
+                    self?.status.statusText = "평면 감지됨! 화면을 탭해서 오브젝트를 배치해보세요"
                 }
             }
         }
+    }
 
-        @objc func handleTap(_ recognizer: UITapGestureRecognizer) {
-            guard let arView = arView else { return }
-            let tapLocation = recognizer.location(in: arView)
+    // 화면을 탭했을 때 호출됨: 탭 좌표를 3D 공간 좌표로 변환해서 그 자리에 오브젝트를 배치
+    @objc func handleTap(_ recognizer: UITapGestureRecognizer) {
+        guard let arView = arView else { return }
+        let tapLocation = recognizer.location(in: arView) // 화면 픽셀 좌표(2D)
 
-            let results = arView.raycast(from: tapLocation, allowing: .estimatedPlane, alignment: .horizontal)
-            guard let firstResult = results.first else {
-                print("탭한 위치에서 평면을 찾지 못했습니다")
-                status.statusText = "이 위치에는 평면이 없어요 — 감지된 평면 위를 탭해보세요"
-                return
-            }
-
-            // Day 4에서 이 오브젝트를 제대로 된 RealityKit 엔티티/머티리얼로 다듬습니다.
-            let anchorEntity = AnchorEntity(world: firstResult.worldTransform)
-            let sphere = ModelEntity(mesh: .generateSphere(radius: 0.05), materials: [SimpleMaterial(color: .systemBlue, isMetallic: false)])
-            anchorEntity.addChild(sphere)
-            arView.scene.addAnchor(anchorEntity)
-
-            status.statusText = "배치 완료! 오브젝트가 공간에 고정되어 있는지 폰을 움직이며 확인해보세요"
+        // raycast: 카메라에서 탭 지점 방향으로 "레이(광선)"를 쏴서 실제 평면과 만나는 3D 지점을 찾음
+        // .estimatedPlane: 아직 정식으로 확정되지 않은 추정 평면도 허용
+        let results = arView.raycast(from: tapLocation, allowing: .estimatedPlane, alignment: .horizontal)
+        guard let firstResult = results.first else {
+            // 결과가 없다는 건 탭한 위치 아래에 평면이 없다는 뜻 (예: 허공을 탭함)
+            print("탭한 위치에서 평면을 찾지 못했습니다")
+            status.statusText = "이 위치에는 평면이 없어요 — 감지된 평면 위를 탭해보세요"
+            return
         }
+
+        // AnchorEntity(world:): raycast로 찾은 3D 좌표에 콘텐츠를 "고정"하는 앵커 생성
+        // Day 4에서 이 오브젝트를 제대로 된 RealityKit 엔티티/머티리얼로 다듬습니다.
+        let anchorEntity = AnchorEntity(world: firstResult.worldTransform)
+        // ModelEntity: 실제로 화면에 보이는 3D 오브젝트 (여기선 반지름 5cm짜리 파란 구)
+        let sphere = ModelEntity(mesh: .generateSphere(radius: 0.05), materials: [SimpleMaterial(color: .systemBlue, isMetallic: false)])
+        anchorEntity.addChild(sphere) // 구를 앵커의 자식으로 붙여서 앵커 위치에 함께 배치되게 함
+        arView.scene.addAnchor(anchorEntity) // 씬에 앵커를 추가해야 실제로 화면에 렌더링됨
+
+        status.statusText = "배치 완료! 오브젝트가 공간에 고정되어 있는지 폰을 움직이며 확인해보세요"
     }
 }
 ```

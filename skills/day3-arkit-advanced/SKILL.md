@@ -9,12 +9,14 @@ description: Day 3 of the Spatial Computing 7-day camp. Teaches advanced ARKit t
 
 ## 프로젝트 규칙 (실제 Xcode 프로젝트에 코딩 — Day 2와 동일한 프로젝트를 이어서 사용)
 
-Day 2에서 만든 `SpatialCampApp/` 프로젝트(xcodegen 기반, `Sources/SpatialCampApp/ARViewContainer.swift`)를 이어서 수정합니다. 새 프로젝트를 만들지 마세요.
+Day 2에서 만든 `SpatialCampApp/` 프로젝트(xcodegen 기반, `Sources/SpatialCampApp/ARViewContainer.swift` + `ARCoordinator.swift`)를 이어서 수정합니다. 새 프로젝트를 만들지 마세요.
 
 - `SpatialCampApp/`이 없다면(Day 2를 건너뛴 경우) `/day2-arkit-basics`를 완료했는지 확인하되, 막지는 말고 없으면 최소한의 베이스(ARSession + 평면 감지 + raycast 배치)부터 만들고 이어가도 괜찮습니다.
+- Day 3에서 수정할 대상은 전부 `ARViewContainer.swift`입니다 (세션 `configuration` 설정은 "설정 담당"인 이 파일에 있음). `ARCoordinator.swift`(이벤트 반응 담당)는 이 Day에서 손대지 않습니다 — 단, 개념 3에서 안내 문구 하나만 그 파일의 `handleTap`에서 바꿉니다.
 - `ARViewContainer.swift`의 `makeUIView` 안 `configuration` 설정 블록에 아래 "코드 (실제로 작성)"의 People Occlusion / Scene Reconstruction 설정을 추가하세요.
 - 코드를 수정한 뒤 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 컴파일 검증하세요. `BUILD SUCCEEDED`가 나올 때까지 고치세요.
 - People Occlusion 결과나 LiDAR mesh는 시뮬레이터에서 볼 수 없으니, **실기(LiDAR 있는 기기면 더 좋음)에서 Xcode로 빌드·실행해야 실제 효과를 확인**할 수 있다고 안내하세요.
+- **코드 작성 시 설명 주석을 함께 남깁니다.** 새로 작성하거나 수정하는 Swift 코드 줄/블록마다, 그게 무엇을 하는지·왜 이렇게 쓰는지 설명하는 한국어 주석을 함께 답니다. 이 캠프는 학습용 자료라서 "자명한 코드엔 주석을 달지 않는다"는 일반적인 클린코드 관례의 예외입니다.
 
 ## 진행 방식 (중요, 모든 Day 공통)
 
@@ -64,9 +66,9 @@ arView.session.run(configuration)
 arView.debugOptions.insert(.showSceneUnderstanding)
 ```
 
-기존 Day 2 코드의 `configuration` 설정 부분을 이 내용으로 대체하고, 나머지(델리게이트, 탭 제스처, raycast 배치 로직)는 그대로 둡니다.
+`ARViewContainer.swift`의 기존 Day 2 코드에서 `configuration` 설정 부분만 이 내용으로 대체하고, 나머지(델리게이트/탭 제스처 등록)는 그대로 둡니다. `ARCoordinator.swift`는 건드리지 않습니다.
 
-`handleTap` 마지막의 `status.statusText = "배치 완료! ..."` 줄도 occlusion을 테스트하도록 문구를 바꾸세요:
+`ARCoordinator.swift`의 `handleTap` 마지막에 있는 `status.statusText = "배치 완료! ..."` 줄도 occlusion을 테스트하도록 문구를 바꾸세요:
 
 ```swift
 status.statusText = "배치 완료! 사람이 오브젝트 앞을 지나가면 자연스럽게 가려지는지 확인해보세요"

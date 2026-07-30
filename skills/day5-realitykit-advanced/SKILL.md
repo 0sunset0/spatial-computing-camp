@@ -9,12 +9,13 @@ description: Day 5 of the Spatial Computing 7-day camp. Teaches advanced Reality
 
 ## 프로젝트 규칙 (실제 Xcode 프로젝트에 코딩 — Day 2~4와 동일한 프로젝트를 이어서 사용)
 
-`SpatialCampApp/Sources/SpatialCampApp/ARViewContainer.swift`를 이어서 수정합니다.
+`SpatialCampApp/Sources/SpatialCampApp/ARCoordinator.swift`를 이어서 수정합니다 (`handleTap`은 이벤트 반응 담당인 `ARCoordinator.swift`에 있습니다. 배포 타깃 변경은 `ARViewContainer.swift`가 아니라 `project.yml`에서 합니다).
 
 - **배포 타깃을 iOS 18.0으로 올려야 합니다**: `ParticleEmitterComponent`(이 코드에서 쓰는 형태)는 iOS 18.0부터 지원됩니다. `SpatialCampApp/project.yml`의 `deploymentTarget.iOS`가 아직 `"17.0"`이면 `"18.0"`으로 바꾸고, `cd SpatialCampApp && xcodegen generate`로 프로젝트를 재생성하세요. (Day 2~4 코드는 iOS 18에서도 그대로 잘 동작합니다.)
-- `handleTap`에서 오브젝트를 배치한 뒤, 아래 "코드 (실제로 작성)"의 파티클 컴포넌트 + Transform 애니메이션(팝인 효과)을 추가하세요.
+- `ARCoordinator.swift`의 `handleTap`에서 오브젝트를 배치한 뒤, 아래 "코드 (실제로 작성)"의 파티클 컴포넌트 + Transform 애니메이션(팝인 효과)을 추가하세요.
 - 수정 후 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 컴파일 검증. `BUILD SUCCEEDED`까지 고치세요.
 - 파티클과 애니메이션은 **실기에서 Xcode로 빌드·실행**해야 실제로 보인다고 안내하세요 (시뮬레이터는 ARKit 카메라 트래킹을 지원하지 않음). 실기가 iOS 18 미만이면 실행이 안 되니, 그 경우 컴파일 확인까지만으로 충분하다고 안내하세요.
+- **코드 작성 시 설명 주석을 함께 남깁니다.** 새로 작성하거나 수정하는 Swift 코드 줄/블록마다, 그게 무엇을 하는지·왜 이렇게 쓰는지 설명하는 한국어 주석을 함께 답니다. 이 캠프는 학습용 자료라서 "자명한 코드엔 주석을 달지 않는다"는 일반적인 클린코드 관례의 예외입니다.
 
 ## 진행 방식 (중요, 모든 Day 공통)
 
@@ -46,7 +47,7 @@ description: Day 5 of the Spatial Computing 7-day camp. Teaches advanced Reality
 | Transform 애니메이션 | 3D 좌표(위치/회전/스케일)가 시간에 따라 보간됨 |
 | (제외) CoreHaptics | 진동 명령일 뿐, 공간/좌표 개념이 전혀 없음 |
 
-## 코드 (실제로 작성 — `ARViewContainer.swift`의 `handleTap` 안, 오브젝트 배치 코드 뒤에 추가)
+## 코드 (실제로 작성 — `ARCoordinator.swift`의 `handleTap` 안, 오브젝트 배치 코드 뒤에 추가)
 
 아래는 완성된 전체 코드입니다. **한 번에 다 쓰지 말고** 위 "트리거 시 할 일"에서 설명한 대로 나눠서 작성하세요: (1) 파티클 부분 → (2) Transform 애니메이션(팝인) 부분.
 

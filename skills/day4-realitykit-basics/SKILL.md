@@ -9,11 +9,12 @@ description: Day 4 of the Spatial Computing 7-day camp. Teaches RealityKit funda
 
 ## 프로젝트 규칙 (실제 Xcode 프로젝트에 코딩 — Day 2~3과 동일한 프로젝트를 이어서 사용)
 
-`SpatialCampApp/Sources/SpatialCampApp/ARViewContainer.swift`를 이어서 수정합니다. 새 프로젝트를 만들지 마세요.
+`SpatialCampApp/Sources/SpatialCampApp/ARCoordinator.swift`를 이어서 수정합니다 (Day 2에서 `ARViewContainer.swift`와 `ARCoordinator.swift`로 파일이 분리됐습니다 — `handleTap`은 이벤트 반응 담당인 `ARCoordinator.swift`에 있습니다). 새 프로젝트를 만들지 마세요.
 
-- `handleTap`에서 박스를 배치하던 부분(`SimpleMaterial` 박스)을 아래 "코드 (실제로 작성)" 내용으로 교체해, `PhysicallyBasedMaterial`을 쓰고 ECS 구조(엔티티/컴포넌트)를 더 명확히 보여주도록 다듬으세요. 이때 mesh도 `generateBox`에서 `generateSphere`로 바꾸세요 (아래 "주의" 참고 — 큐브는 하이라이트가 잘 안 보입니다).
+- `ARCoordinator.swift`의 `handleTap`에서 박스를 배치하던 부분(`SimpleMaterial` 박스)을 아래 "코드 (실제로 작성)" 내용으로 교체해, `PhysicallyBasedMaterial`을 쓰고 ECS 구조(엔티티/컴포넌트)를 더 명확히 보여주도록 다듬으세요. 이때 mesh도 `generateBox`에서 `generateSphere`로 바꾸세요 (아래 "주의" 참고 — 큐브는 하이라이트가 잘 안 보입니다).
 - 수정 후 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 컴파일 검증. `BUILD SUCCEEDED`까지 고치세요.
 - 실제 재질/조명 변화는 **실기에서 Xcode로 빌드·실행**해야 눈으로 확인할 수 있다고 안내하세요. `metallic`은 `0.0`으로 유지하세요 — 환경 반사를 별도로 연결하지 않으면 금속 재질은 반사할 게 없어 그냥 회색으로 보입니다 (아래 "주의" 참고).
+- **코드 작성 시 설명 주석을 함께 남깁니다.** 새로 작성하거나 수정하는 Swift 코드 줄/블록마다, 그게 무엇을 하는지·왜 이렇게 쓰는지 설명하는 한국어 주석을 함께 답니다. 이 캠프는 학습용 자료라서 "자명한 코드엔 주석을 달지 않는다"는 일반적인 클린코드 관례의 예외입니다.
 
 ## 진행 방식 (중요, 모든 Day 공통)
 
@@ -43,7 +44,7 @@ description: Day 4 of the Spatial Computing 7-day camp. Teaches RealityKit funda
 - **조명**: RealityKit의 기본 환경광(IBL, Image-Based Lighting) 개념과 커스텀 라이트 엔티티.
 - **씬 계층 구조**: `AnchorEntity`를 루트로 자식 엔티티들을 붙여나가는 트리 구조.
 
-## 코드 (실제로 작성 — `ARViewContainer.swift`의 `handleTap` 내부 박스 배치 부분을 교체)
+## 코드 (실제로 작성 — `ARCoordinator.swift`의 `handleTap` 내부 박스 배치 부분을 교체)
 
 아래는 완성된 전체 코드입니다. **한 번에 다 쓰지 말고** 위 "트리거 시 할 일"에서 설명한 대로 3단계로 나눠서 작성하세요: (1) `mesh`/`modelEntity` 분리(재질은 기존 것 유지) → (2) `material`(PhysicallyBasedMaterial) 도입 → (3) `AnchorEntity`/씬 연결 확인.
 
