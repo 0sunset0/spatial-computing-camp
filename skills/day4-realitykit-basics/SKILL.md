@@ -1,6 +1,6 @@
 ---
 name: day4-realitykit-basics
-description: Day 4 of the Spatial Computing 7-day camp. Teaches RealityKit fundamentals — the Entity-Component-System architecture, materials, lighting, and AnchorEntity — via a beginner-friendly, in-chat concept→code→quiz loop per concept (no note files), grounded in current Apple documentation, then codes the real SpatialCampApp Xcode project. Trigger this when the user runs /day4-realitykit-basics, has finished day3-arkit-advanced, or asks about RealityKit ECS, Entity, Component, materials, or AnchorEntity in the context of the spatial computing camp.
+description: Day 4 of the Spatial Computing 6-day camp. Teaches RealityKit fundamentals — the Entity-Component-System architecture, materials, lighting, and AnchorEntity — via a beginner-friendly, in-chat concept→code→quiz loop per concept (no note files), grounded in current Apple documentation, then codes the real SpatialCampApp Xcode project. Trigger this when the user runs /day4-realitykit-basics, has finished day3-arkit-advanced, or asks about RealityKit ECS, Entity, Component, materials, or AnchorEntity in the context of the spatial computing camp.
 ---
 
 # Day 4 — RealityKit 기초
@@ -31,7 +31,7 @@ description: Day 4 of the Spatial Computing 7-day camp. Teaches RealityKit funda
 3. **개념 2 — 머티리얼(SimpleMaterial vs PhysicallyBasedMaterial)**: 개념 설명 → 퀴즈 2 → 피드백 → "이제 재질을 PhysicallyBasedMaterial로 바꾸겠습니다"라고 말한 뒤 `material` 변수(`baseColor`/`roughness`/`metallic`)를 추가하고 `ModelEntity`가 이 재질을 쓰도록 교체 → `xcodebuild ... build`로 확인. **`metallic`은 반드시 `0.0`으로 두세요** (위 "주의" 참고 — 환경 반사 연결 없이 `metallic`을 높이면 그냥 회색으로 보이는 흔한 함정이 있습니다). 실기 확인을 안내할 때도 "금속처럼 반짝인다"가 아니라 "매끈한 흰색 플라스틱처럼 은은한 광택이 도는지, 조명이 있는 쪽으로 폰을 움직이면 하이라이트가 움직이는지" 확인해보라고 안내하세요.
 4. **개념 3 — AnchorEntity와 씬 계층 구조**: 개념 설명 → 퀴즈 3 → 피드백 → "이제 이 엔티티가 실제 공간 앵커에 어떻게 연결되는지 확인해보겠습니다"라고 말한 뒤 기존 `AnchorEntity(world:)` → `addChild` → `scene.addAnchor` 흐름을 대화창에서 짚어주며 필요하면 다듬고 → 최종 `xcodebuild ... build`로 확인.
 5. 성공/실패를 대화창에 보고 (실패하면 사용자에게 보고하기 전에 먼저 고칠 것).
-6. 모든 게 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 5로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day5-realitykit-advanced` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day5-realitykit-advanced`를 직접 호출**하세요.
+6. 모든 게 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 5로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day5-interaction-gesture` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day5-interaction-gesture`를 직접 호출**하세요.
 
 ## 다룰 핵심 개념
 

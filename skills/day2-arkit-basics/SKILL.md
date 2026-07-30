@@ -1,6 +1,6 @@
 ---
 name: day2-arkit-basics
-description: Day 2 of the Spatial Computing 7-day camp. Teaches ARKit fundamentals — world tracking, session configuration, plane detection, anchors, hit testing — via a beginner-friendly, in-chat concept→code→quiz loop per concept (no note files), then codes the real SpatialCampApp Xcode project. Trigger this when the user runs /day2-arkit-basics, has completed day1-spatial-intro and wants to continue, or asks about ARKit basics, ARSession, plane detection, or anchors in the context of the spatial computing camp.
+description: Day 2 of the Spatial Computing 6-day camp. Teaches ARKit fundamentals — world tracking, session configuration, plane detection, anchors, hit testing — via a beginner-friendly, in-chat concept→code→quiz loop per concept (no note files), then codes the real SpatialCampApp Xcode project. Trigger this when the user runs /day2-arkit-basics, has completed day1-spatial-intro and wants to continue, or asks about ARKit basics, ARSession, plane detection, or anchors in the context of the spatial computing camp.
 ---
 
 # Day 2 — ARKit 기초
@@ -9,7 +9,7 @@ description: Day 2 of the Spatial Computing 7-day camp. Teaches ARKit fundamenta
 
 ## 프로젝트 규칙 (Day 2~7 공통 — 실제 Xcode 프로젝트에 코딩)
 
-이 캠프는 Day 2부터 **하나의 실제 iOS 앱 프로젝트를 7일에 걸쳐 계속 발전시켜 나갑니다.** 코드 스니펫을 대화창에 "보여주기"만 하지 않고, 실제 프로젝트 파일에 직접 작성/수정합니다.
+이 캠프는 Day 2부터 **하나의 실제 iOS 앱 프로젝트를 6일에 걸쳐 계속 발전시켜 나갑니다.** 코드 스니펫을 대화창에 "보여주기"만 하지 않고, 실제 프로젝트 파일에 직접 작성/수정합니다.
 
 - 프로젝트 위치: 현재 작업 폴더의 `SpatialCampApp/` (xcodegen 기반: `project.yml` + `Sources/SpatialCampApp/*.swift`).
 - `SpatialCampApp/project.yml`이 없다면 이번이 이 작업 폴더에서 처음 코딩하는 것이므로, 아래 "프로젝트 최초 생성" 절차부터 수행하세요. 있다면 기존 파일을 이어서 수정하세요.
