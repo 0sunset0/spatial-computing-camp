@@ -1,6 +1,6 @@
 ---
 name: day4-realitykit-basics
-description: Day 4 of the Spatial Computing 7-day camp. Teaches RealityKit fundamentals — the Entity-Component-System architecture, materials, lighting, and AnchorEntity — via a beginner-friendly, in-chat concept→code→quiz loop per concept (no note files), grounded in current Apple documentation, then codes the real SpatialCampApp Xcode project. Trigger this when the user runs /day4-realitykit-basics, has finished day3-arkit-advanced, or asks about RealityKit ECS, Entity, Component, materials, or AnchorEntity in the context of the spatial computing camp.
+description: Day 4 of the Spatial Computing 7-day camp. Teaches RealityKit fundamentals — the Entity-Component-System architecture, materials, and AnchorEntity — via a beginner-friendly, in-chat concept→code→quiz loop per concept (no note files), grounded in current Apple documentation, then codes the real SpatialCampApp Xcode project. Trigger this when the user runs /day4-realitykit-basics, has finished day3-arkit-advanced, or asks about RealityKit ECS, Entity, Component, materials, or AnchorEntity in the context of the spatial computing camp.
 ---
 
 # Day 4 — RealityKit 기초
@@ -15,6 +15,10 @@ description: Day 4 of the Spatial Computing 7-day camp. Teaches RealityKit funda
 - 수정 후 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 컴파일 검증. `BUILD SUCCEEDED`까지 고치세요.
 - 실제 재질/조명 변화는 **실기에서 Xcode로 빌드·실행**해야 눈으로 확인할 수 있다고 안내하세요. `metallic`은 `0.0`으로 유지하세요 — 환경 반사를 별도로 연결하지 않으면 금속 재질은 반사할 게 없어 그냥 회색으로 보입니다 (아래 "주의" 참고).
 - **코드 작성 시 설명 주석을 함께 남깁니다.** 새로 작성하거나 수정하는 Swift 코드 줄/블록마다, 그게 무엇을 하는지·왜 이렇게 쓰는지 설명하는 한국어 주석을 함께 답니다. 이 캠프는 학습용 자료라서 "자명한 코드엔 주석을 달지 않는다"는 일반적인 클린코드 관례의 예외입니다.
+- **역할별 함수 분리 컨벤션 (Day 4 마무리 시점부터 적용)**: `makeUIView`/`handleTap`을 한 덩어리로 두지 않고, 역할별로 작은 private 함수로 나눕니다.
+  - `ARViewContainer.swift`: `makeUIView`는 아래 함수들을 순서대로 호출하는 "조립" 역할만 함 — `makeSessionConfiguration() -> ARWorldTrackingConfiguration`(세션 설정), `configureDebugOptions(for:)`(디버그 시각화), `setupTapGesture(on:coordinator:)`(제스처 등록).
+  - `ARCoordinator.swift`: `handleTap`은 아래 함수들을 순서대로 호출하는 "지휘" 역할만 함 — `raycastResult(for:in:) -> ARRaycastResult?`(탭 좌표 → 3D 좌표 감지), `makeSphereEntity() -> ModelEntity`(mesh+재질 조립), `place(_:at:in:)`(AnchorEntity 생성 + addChild + scene.addAnchor).
+  - **Day 5~7에서 새 코드를 추가할 때는 이 역할 구분에 맞는 함수를 찾아 넣으세요.** 예: 엔티티 자체의 속성(파티클, 충돌 shape 등)은 `makeSphereEntity()`에, 배치/씬 등록 시점에 필요한 것(팝인 애니메이션, 제스처 설치 등)은 `place(_:at:in:)`에, 세션/뷰 레벨 설정(구독 등록 등)은 `ARViewContainer.swift`의 새 private 함수로 추가.
 
 ## 진행 방식 (중요, 모든 Day 공통)
 
@@ -41,7 +45,6 @@ description: Day 4 of the Spatial Computing 7-day camp. Teaches RealityKit funda
 - **머티리얼**: `SimpleMaterial`(빠른 프로토타이핑용) vs `PhysicallyBasedMaterial`(PBR, 실제감 있는 렌더링용) 차이.
 - **주의 (실제로 겪는 흔한 함정)**: `ARView`는 기본적으로 실제 카메라로 보는 방을 반사 재질에 자동으로 연결해주지 않습니다 — `environmentTexturing = .automatic`을 켜도 ARKit이 환경 프로브(`AREnvironmentProbeAnchor`)만 만들 뿐, 이걸 `arView.environment.lighting.resource`에 직접 연결해야 반사가 생깁니다. 그래서 `metallic`을 높게 주면 반사할 게 없어 그냥 회색으로 보입니다 ([Apple 공식 문서](https://developer.apple.com/documentation/realitykit/applying-realistic-material-and-lighting-effects-to-entities), [개발자 포럼](https://forums.developer.apple.com/forums/thread/763481)). 이 프로젝트에서는 환경 프로브 연결까지는 다루지 않고, `metallic`을 0으로 두고 `roughness`만 낮춰서 ARKit의 실시간 조명 추정만으로 자연스러운 광택(글로시 플라스틱 느낌)을 보여주는 것으로 범위를 제한합니다.
 - **주의 (모양도 하이라이트에 영향을 줍니다)**: 큐브(평평한 면)는 빛-표면-카메라의 반사각이 정확히 맞아야만 하이라이트가 보여서, 바닥에 놓인 박스 윗면(항상 하늘을 향함)과 손에 든 폰의 비스듬한 시야각이 우연히 맞지 않으면 광택이 거의 안 보입니다. 구(둥근 면)는 표면이 사방으로 굽어 있어 거의 모든 각도에서 표면 어딘가는 반사각이 맞아떨어지므로 하이라이트가 훨씬 안정적으로 보입니다. 그래서 이 프로젝트는 `generateBox` 대신 `generateSphere`를 씁니다.
-- **조명**: RealityKit의 기본 환경광(IBL, Image-Based Lighting) 개념과 커스텀 라이트 엔티티.
 - **씬 계층 구조**: `AnchorEntity`를 루트로 자식 엔티티들을 붙여나가는 트리 구조.
 
 ## 코드 (실제로 작성 — `ARCoordinator.swift`의 `handleTap` 내부 박스 배치 부분을 교체)

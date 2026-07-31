@@ -9,10 +9,12 @@ description: Day 5 of the Spatial Computing 7-day camp. Teaches advanced Reality
 
 ## 프로젝트 규칙 (실제 Xcode 프로젝트에 코딩 — Day 2~4와 동일한 프로젝트를 이어서 사용)
 
-`SpatialCampApp/Sources/SpatialCampApp/ARCoordinator.swift`를 이어서 수정합니다 (`handleTap`은 이벤트 반응 담당인 `ARCoordinator.swift`에 있습니다. 배포 타깃 변경은 `ARViewContainer.swift`가 아니라 `project.yml`에서 합니다).
+`SpatialCampApp/Sources/SpatialCampApp/ARCoordinator.swift`를 이어서 수정합니다 (이벤트 반응 담당인 `ARCoordinator.swift`에 있습니다. 배포 타깃 변경은 `ARViewContainer.swift`가 아니라 `project.yml`에서 합니다).
+
+Day 4 마무리 시점에 `handleTap`은 `raycastResult(for:in:)`(감지) → `makeSphereEntity()`(엔티티 생성) → `place(_:at:in:)`(배치)를 순서대로 호출하는 구조로 역할이 나뉘어 있습니다. Day 5의 새 코드도 이 구조에 맞춰 넣습니다.
 
 - **배포 타깃을 iOS 18.0으로 올려야 합니다**: `ParticleEmitterComponent`(이 코드에서 쓰는 형태)는 iOS 18.0부터 지원됩니다. `SpatialCampApp/project.yml`의 `deploymentTarget.iOS`가 아직 `"17.0"`이면 `"18.0"`으로 바꾸고, `cd SpatialCampApp && xcodegen generate`로 프로젝트를 재생성하세요. (Day 2~4 코드는 iOS 18에서도 그대로 잘 동작합니다.)
-- `ARCoordinator.swift`의 `handleTap`에서 오브젝트를 배치한 뒤, 아래 "코드 (실제로 작성)"의 파티클 컴포넌트 + Transform 애니메이션(팝인 효과)을 추가하세요.
+- 파티클 컴포넌트는 `makeSphereEntity()` 안(엔티티 자체의 속성이므로), Transform 팝인 애니메이션은 `place(_:at:in:)` 안(엔티티가 anchor에 붙고 씬에 등록된 뒤에 트리거해야 하므로)에 추가하세요. 아래 "코드 (실제로 작성)" 참고.
 - 수정 후 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 컴파일 검증. `BUILD SUCCEEDED`까지 고치세요.
 - 파티클과 애니메이션은 **실기에서 Xcode로 빌드·실행**해야 실제로 보인다고 안내하세요 (시뮬레이터는 ARKit 카메라 트래킹을 지원하지 않음). 실기가 iOS 18 미만이면 실행이 안 되니, 그 경우 컴파일 확인까지만으로 충분하다고 안내하세요.
 - **코드 작성 시 설명 주석을 함께 남깁니다.** 새로 작성하거나 수정하는 Swift 코드 줄/블록마다, 그게 무엇을 하는지·왜 이렇게 쓰는지 설명하는 한국어 주석을 함께 답니다. 이 캠프는 학습용 자료라서 "자명한 코드엔 주석을 달지 않는다"는 일반적인 클린코드 관례의 예외입니다.
@@ -28,8 +30,8 @@ description: Day 5 of the Spatial Computing 7-day camp. Teaches advanced Reality
 ## 트리거 시 할 일 (항상 이 순서: [개념 → 퀴즈 → 코드로 확인]을 개념별로 반복)
 
 1. **공식 문서 확인 (필수, 조용히 먼저 수행)**: `web_search` + `web_fetch`로 `ParticleEmitterComponent`, `Entity.move(to:relativeTo:duration:timingFunction:)`, `AnimationResource` 관련 Apple 공식 문서를 실제로 열어 최신 API로 확인. RealityKit 파티클 API는 상대적으로 최근에 추가된 영역이라 특히 최신 문서 확인이 중요함을 유의.
-2. **개념 1 — ParticleEmitterComponent**: 개념 설명 → 퀴즈 1(AskUserQuestion) → 피드백 → "이제 배포 타깃을 iOS 18로 올리고 파티클 컴포넌트를 오브젝트에 붙이겠습니다"라고 말한 뒤 `project.yml`의 `deploymentTarget.iOS`를 `"18.0"`으로 바꾸고 `xcodegen generate` 실행 → `handleTap`에 `ParticleEmitterComponent` 설정을 추가 → `xcodebuild ... build`로 확인.
-3. **개념 2 — Transform 애니메이션**: 개념 설명 → 퀴즈 2 → 피드백 → "이제 오브젝트가 배치될 때 작게 시작해서 커지는 팝인 애니메이션을 추가하겠습니다"라고 말한 뒤 `handleTap`에 `move(to:relativeTo:duration:timingFunction:)` 애니메이션 코드를 추가 → `xcodebuild ... build`로 확인.
+2. **개념 1 — ParticleEmitterComponent**: 개념 설명 → 퀴즈 1(AskUserQuestion) → 피드백 → "이제 배포 타깃을 iOS 18로 올리고 파티클 컴포넌트를 오브젝트에 붙이겠습니다"라고 말한 뒤 `project.yml`의 `deploymentTarget.iOS`를 `"18.0"`으로 바꾸고 `xcodegen generate` 실행 → `makeSphereEntity()`에 `ParticleEmitterComponent` 설정을 추가 → `xcodebuild ... build`로 확인.
+3. **개념 2 — Transform 애니메이션**: 개념 설명 → 퀴즈 2 → 피드백 → "이제 오브젝트가 배치될 때 작게 시작해서 커지는 팝인 애니메이션을 추가하겠습니다"라고 말한 뒤 `place(_:at:in:)`에 `move(to:relativeTo:duration:timingFunction:)` 애니메이션 코드를 추가 → `xcodebuild ... build`로 확인.
 4. **개념 3 — 성능 튜닝**: 개념 설명 → 퀴즈 3 → 피드백 → 새 기능을 추가하기보다, 지금까지 넣은 파티클(`mainEmitter.birthRate`/`lifeSpan`)과 애니메이션 동시 실행이 왜 부하를 키우는지 짚어주고 필요하면 값을 조정 → 최종 `xcodebuild ... build`로 확인.
 5. 성공/실패를 대화창에 보고 (실패하면 사용자에게 보고하기 전에 먼저 고칠 것).
 6. 모든 게 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 6으로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day6-interaction-gesture` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day6-interaction-gesture`를 직접 호출**하세요.
@@ -47,30 +49,50 @@ description: Day 5 of the Spatial Computing 7-day camp. Teaches advanced Reality
 | Transform 애니메이션 | 3D 좌표(위치/회전/스케일)가 시간에 따라 보간됨 |
 | (제외) CoreHaptics | 진동 명령일 뿐, 공간/좌표 개념이 전혀 없음 |
 
-## 코드 (실제로 작성 — `ARCoordinator.swift`의 `handleTap` 안, 오브젝트 배치 코드 뒤에 추가)
+## 코드 (실제로 작성 — `ARCoordinator.swift`의 `makeSphereEntity()`와 `place(_:at:in:)`에 나눠서 추가)
 
-아래는 완성된 전체 코드입니다. **한 번에 다 쓰지 말고** 위 "트리거 시 할 일"에서 설명한 대로 나눠서 작성하세요: (1) 파티클 부분 → (2) Transform 애니메이션(팝인) 부분.
+아래는 완성된 전체 코드입니다. **한 번에 다 쓰지 말고** 위 "트리거 시 할 일"에서 설명한 대로 나눠서 작성하세요: (1) `makeSphereEntity()`에 파티클 부분 → (2) `place(_:at:in:)`에 Transform 애니메이션(팝인) 부분.
+
+`makeSphereEntity()` — `return ModelEntity(mesh: mesh, materials: [material])` 앞뒤로 파티클 설정 추가:
 
 ```swift
-// 1. 파티클: 오브젝트에서 입자를 뿜어내는 시각 효과
+let sphere = ModelEntity(mesh: mesh, materials: [material])
+
+// 파티클: 오브젝트에서 입자를 뿜어내는 시각 효과 (엔티티 자체의 속성이라 여기서 붙임)
 var particles = ParticleEmitterComponent()
 particles.emitterShape = .sphere
 particles.mainEmitter.birthRate = 200
 particles.mainEmitter.lifeSpan = 1.5
 particles.mainEmitter.color = .constant(.single(.systemPink))
-modelEntity.components.set(particles)
+sphere.components.set(particles)
 
-// 2. Transform 애니메이션: 아주 작게(scale 0.01) 시작해서 원래 크기(scale 1.0)로
-// 0.3초에 걸쳐 커지는 "팝인" 효과. 배치되는 순간이 시각적으로 뚜렷하게 느껴집니다.
-modelEntity.transform.scale = SIMD3<Float>(repeating: 0.01)
-var poppedTransform = modelEntity.transform
-poppedTransform.scale = SIMD3<Float>(repeating: 1.0)
-modelEntity.move(to: poppedTransform, relativeTo: anchorEntity, duration: 0.3, timingFunction: .easeOut)
-
-status.statusText = "배치 완료! 파티클과 팝인 애니메이션이 보이는지 확인해보세요"
+return sphere
 ```
 
-`modelEntity.transform.scale = SIMD3<Float>(repeating: 0.01)`은 `anchorEntity.addChild(modelEntity)` 이전, `arView.scene.addAnchor(anchorEntity)` 이전 어느 시점이든 상관없지만, 애니메이션 호출(`move(to:)`)은 `anchorEntity`가 씬에 추가된 뒤(또는 최소한 `relativeTo`로 넘기는 `anchorEntity`가 만들어진 뒤)에 와야 합니다.
+`place(_:at:in:)` — `anchorEntity.addChild(entity)` 뒤에 팝인 애니메이션 추가:
+
+```swift
+private func place(_ entity: ModelEntity, at transform: simd_float4x4, in arView: ARView) {
+    let anchorEntity = AnchorEntity(world: transform)
+
+    // 아주 작게(scale 0.01) 시작해서, addChild로 씬에 편입된 뒤 원래 크기(scale 1.0)로
+    // 커지는 "팝인" 효과를 만듭니다. relativeTo에 anchorEntity를 넘기려면 이미 부모-자식
+    // 관계가 맺어져 있어야 하므로, 애니메이션 호출은 반드시 addChild 이후여야 합니다.
+    entity.transform.scale = SIMD3<Float>(repeating: 0.01)
+    anchorEntity.addChild(entity)
+    arView.scene.addAnchor(anchorEntity)
+
+    var poppedTransform = entity.transform
+    poppedTransform.scale = SIMD3<Float>(repeating: 1.0)
+    entity.move(to: poppedTransform, relativeTo: anchorEntity, duration: 0.3, timingFunction: .easeOut)
+}
+```
+
+`handleTap`의 배치 완료 안내 문구도 파티클/애니메이션 테스트용으로 바꾸세요:
+
+```swift
+status.statusText = "배치 완료! 파티클과 팝인 애니메이션이 보이는지 확인해보세요"
+```
 
 ## 퀴즈
 

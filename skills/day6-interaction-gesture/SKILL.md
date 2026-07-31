@@ -11,10 +11,11 @@ description: Day 6 of the Spatial Computing 7-day camp. Teaches interaction desi
 
 `SpatialCampApp/Sources/SpatialCampApp/ARViewContainer.swift`(설정 담당)와 `ARCoordinator.swift`(이벤트 반응 담당)를 이어서 수정합니다.
 
-- 박스를 배치하는 부분(`ARCoordinator.swift`의 `handleTap`)에 `generateCollisionShapes` + `arView.installGestures`를 추가해서, 배치한 박스를 드래그/회전/스케일할 수 있게 만드세요. 충돌 이벤트 구독도 추가하세요 (아래 "코드 (실제로 작성)" 참고).
+Day 4~5를 거치며 `ARCoordinator.swift`는 `raycastResult(for:in:)`(감지) → `makeSphereEntity()`(엔티티 생성) → `place(_:at:in:)`(배치)로, `ARViewContainer.swift`는 `makeSessionConfiguration()`/`configureDebugOptions(for:)`/`setupTapGesture(on:coordinator:)`로 역할이 나뉘어 있습니다. Day 6의 새 코드도 이 구조에 맞춰 넣습니다.
+
+- 충돌 shape(`generateCollisionShapes`)는 엔티티 자체의 속성이므로 `makeSphereEntity()`에, 제스처 설치(`arView.installGestures`)는 엔티티가 씬에 실제로 등록된 뒤 붙여야 하므로 `place(_:at:in:)`에 추가하세요. 충돌 이벤트 구독은 `ARViewContainer.swift`에 새 private 함수(`subscribeToCollisionEvents(on:coordinator:)`)로 추가하세요 (아래 "코드 (실제로 작성)" 참고).
 - 수정 후 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 컴파일 검증. `BUILD SUCCEEDED`까지 고치세요.
 - 제스처 동작은 **실기에서 Xcode로 빌드·실행**해서 직접 만져봐야 확인된다고 안내하세요.
-- **선택 정리**: 사용자가 화면의 앵커 좌표축(xyz 기즈모)이 지저분하다고 느끼면, `ARViewContainer.swift`의 `makeUIView`에 있는 `arView.debugOptions`에서 `.showAnchorOrigins`를 빼도 됩니다 (Day 2에서 트래킹 확인용으로 켰던 디버그 옵션인데, 이제 파티클·오브젝트·제스처로 상태가 충분히 보이므로 더 이상 필요 없습니다). `.showFeaturePoints`/`.showSceneUnderstanding`은 유지해도 무방합니다.
 - **코드 작성 시 설명 주석을 함께 남깁니다.** 새로 작성하거나 수정하는 Swift 코드 줄/블록마다, 그게 무엇을 하는지·왜 이렇게 쓰는지 설명하는 한국어 주석을 함께 답니다. 이 캠프는 학습용 자료라서 "자명한 코드엔 주석을 달지 않는다"는 일반적인 클린코드 관례의 예외입니다.
 
 ## 진행 방식 (중요, 모든 Day 공통)
@@ -28,8 +29,8 @@ description: Day 6 of the Spatial Computing 7-day camp. Teaches interaction desi
 ## 트리거 시 할 일 (항상 이 순서: [개념 → 퀴즈 → 코드로 확인]을 개념별로 반복)
 
 1. **공식 문서 확인 (필수, 조용히 먼저 수행)**: `web_search` + `web_fetch`로 RealityKit 제스처(`EntityGestureRecognizer` 관련 API, `.installGestures()`), `CollisionComponent`, `PhysicsBodyComponent`, visionOS 인터랙션(`SpatialTapGesture`, 시선+핀치 모델) 관련 Apple 공식 문서를 실제로 열어 최신 API로 확인.
-2. **개념 1 — RealityKit 제스처 + 전제 조건(CollisionComponent)**: 개념 설명 → 퀴즈 1(AskUserQuestion) → 피드백 → "이제 배치된 박스에 충돌 shape와 제스처를 붙이겠습니다"라고 말한 뒤 `ARCoordinator.swift`의 `handleTap` 박스 배치 코드 뒤에 `generateCollisionShapes` + `installGestures` + 상태 문구 갱신만 추가 → `xcodebuild ... build`로 확인.
-3. **개념 2 — 충돌/물리 (CollisionComponent vs PhysicsBodyComponent)**: 개념 설명 → 퀴즈 2 → 피드백 → "이제 충돌이 실제로 감지되는지 콘솔에서 확인할 수 있는 구독 코드를 추가하겠습니다"라고 말한 뒤 `ARCoordinator.swift` 상단에 `import Combine` 추가 + `ARCoordinator`에 `collisionSubscription` 프로퍼티 추가 + `ARViewContainer.swift`의 `makeUIView`에 `arView.scene.subscribe(to: CollisionEvents.Began.self)` 구독을 추가 → `xcodebuild ... build`로 확인.
+2. **개념 1 — RealityKit 제스처 + 전제 조건(CollisionComponent)**: 개념 설명 → 퀴즈 1(AskUserQuestion) → 피드백 → "이제 배치된 박스에 충돌 shape와 제스처를 붙이겠습니다"라고 말한 뒤 `makeSphereEntity()`에 `generateCollisionShapes` 추가 + `place(_:at:in:)`에 `installGestures` + 상태 문구 갱신 추가 → `xcodebuild ... build`로 확인.
+3. **개념 2 — 충돌/물리 (CollisionComponent vs PhysicsBodyComponent)**: 개념 설명 → 퀴즈 2 → 피드백 → "이제 충돌이 실제로 감지되는지 콘솔에서 확인할 수 있는 구독 코드를 추가하겠습니다"라고 말한 뒤 `ARCoordinator.swift` 상단에 `import Combine` 추가 + `ARCoordinator`에 `collisionSubscription` 프로퍼티 추가 + `ARViewContainer.swift`에 `subscribeToCollisionEvents(on:coordinator:)` 함수를 새로 만들어 `makeUIView`에서 호출 → `xcodebuild ... build`로 확인.
 4. **개념 3 — iOS AR vs visionOS 인터랙션 모델**: 개념 설명 → 퀴즈 3 → 피드백. 이 프로젝트는 iOS 대상이라 추가 코드는 없으니, 코드 변경 없이 최종 `xcodebuild ... build`로 전체 컴파일을 한 번 더 확인.
 5. 성공/실패를 대화창에 보고 (실패하면 사용자에게 보고하기 전에 먼저 고칠 것).
 6. 모든 게 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 7(캡스톤)로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day7-mini-project` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day7-mini-project`를 직접 호출**하세요.
@@ -42,21 +43,38 @@ description: Day 6 of the Spatial Computing 7-day camp. Teaches interaction desi
 - **visionOS 인터랙션 모델**: 시선(gaze)으로 대상을 지정하고 손가락 핀치(pinch)로 확정하는 간접 조작 방식 — 컨트롤러나 직접 터치가 없는 것이 iOS AR과의 근본적 차이. `SpatialTapGesture` 등 visionOS 전용 제스처 API 언급.
 - **디자인 관점**: 두 플랫폼의 인터랙션 모델이 다르기 때문에 "같은 콘텐츠, 다른 상호작용 설계"가 필요하다는 점을 강조 (UX 설계 관심사와 연결).
 
-## 코드 (실제로 작성 — `ARCoordinator.swift`의 `handleTap` 안, 박스 배치 코드 바로 뒤에 추가)
+## 코드 (실제로 작성 — `makeSphereEntity()`, `place(_:at:in:)`, `ARViewContainer.swift`에 나눠서 추가)
 
-아래는 완성된 전체 코드입니다. **한 번에 다 쓰지 말고** 위 "트리거 시 할 일"에서 설명한 대로 나눠서 작성하세요: (1) `generateCollisionShapes`/`installGestures` 부분(`ARCoordinator.swift`) → (2) 충돌 이벤트 구독 부분(`ARCoordinator.swift`의 프로퍼티 + `ARViewContainer.swift`의 구독 코드).
+아래는 완성된 전체 코드입니다. **한 번에 다 쓰지 말고** 위 "트리거 시 할 일"에서 설명한 대로 나눠서 작성하세요: (1) `makeSphereEntity()`에 `generateCollisionShapes` → (2) `place(_:at:in:)`에 `installGestures` → (3) 충돌 이벤트 구독 부분(`ARCoordinator.swift`의 프로퍼티 + `ARViewContainer.swift`의 새 함수).
+
+`makeSphereEntity()` — `return sphere` 앞에 충돌 shape 추가:
 
 ```swift
-modelEntity.generateCollisionShapes(recursive: true)
-arView.installGestures([.translation, .rotation, .scale], for: modelEntity)
+// 충돌 shape: 이게 있어야 제스처/충돌 감지가 동작함 (엔티티 자체의 속성이라 여기서 붙임)
+sphere.generateCollisionShapes(recursive: true)
+
+return sphere
+```
+
+`place(_:at:in:)` — `arView.scene.addAnchor(anchorEntity)` 뒤에 제스처 설치 추가 (엔티티가 씬에 실제로 등록된 뒤라야 제스처가 정상 동작함):
+
+```swift
+arView.installGestures([.translation, .rotation, .scale], for: entity)
+```
+
+`handleTap` 마지막의 안내 문구도 제스처 테스트용으로 바꾸세요:
+
+```swift
 status.statusText = "배치 완료! 오브젝트를 드래그/두 손가락으로 회전·확대해보세요"
 ```
 
-`ARViewContainer.swift`의 `makeUIView`(또는 `ARCoordinator` 초기화 시 한 번)에 충돌 이벤트 구독 추가:
+`ARViewContainer.swift`에 새 private 함수를 만들어 충돌 이벤트 구독을 추가하고, `makeUIView`에서 호출하세요:
 
 ```swift
-context.coordinator.collisionSubscription = arView.scene.subscribe(to: CollisionEvents.Began.self) { event in
-    print("충돌 발생: \(event.entityA.name) - \(event.entityB.name)")
+private func subscribeToCollisionEvents(on arView: ARView, coordinator: ARCoordinator) {
+    coordinator.collisionSubscription = arView.scene.subscribe(to: CollisionEvents.Began.self) { event in
+        print("충돌 발생: \(event.entityA.name) - \(event.entityB.name)")
+    }
 }
 ```
 
