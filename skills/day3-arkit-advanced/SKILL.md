@@ -1,6 +1,6 @@
 ---
 name: day3-arkit-advanced
-description: Day 3 of the Spatial Computing 6-day camp. Teaches advanced ARKit topics — People Occlusion, Face/Body Tracking, Scene Geometry/reconstruction, and performance tuning — via a beginner-friendly, in-chat concept→code→quiz loop per concept (no note files), grounded in current Apple documentation, then codes the real SpatialCampApp Xcode project. Trigger this when the user runs /day3-arkit-advanced, has finished day2-arkit-basics, or asks about ARKit occlusion, face tracking, LiDAR scene reconstruction, or ARKit performance in the context of the spatial computing camp.
+description: Day 3 of the Spatial Computing 7-day camp. Teaches advanced ARKit topics — People Occlusion, Face/Body Tracking, Scene Geometry/reconstruction, and performance tuning — via a beginner-friendly, in-chat concept→code→quiz loop per concept (no note files), grounded in current Apple documentation, then codes the real SpatialCampApp Xcode project. Trigger this when the user runs /day3-arkit-advanced, has finished day2-arkit-basics, or asks about ARKit occlusion, face tracking, LiDAR scene reconstruction, or ARKit performance in the context of the spatial computing camp.
 ---
 
 # Day 3 — ARKit 심화

@@ -1,13 +1,13 @@
-# Spatial Computing 6-Day Camp
+# Spatial Computing 7-Day Camp
 
-Spatial Computing 입문자를 위한 6일짜리 spatial computing 학습 Skill 시리즈입니다. 
+Spatial Computing 입문자를 위한 7일짜리 spatial computing 학습 Skill 시리즈입니다. 
 
 ## 필요 환경
 
 | 항목 | 요구 사항 |
 |---|---|
-| Xcode | 16 이상 |
-| iOS 배포 타깃 | iOS 17+ |
+| Xcode | 16 이상 (iOS 18 SDK 포함 — Day 5부터 `ParticleEmitterComponent`가 iOS 18을 요구) |
+| iOS 배포 타깃 | Day 2~4: iOS 17+, Day 5부터: iOS 18+ (스킬이 진행 중 `project.yml`을 자동으로 올려줌) |
 | xcodegen | 필수. `brew install xcodegen`으로 설치 |
 | 실기 기기 | 아이폰/아이패드 권장 (시뮬레이터는 ARKit 카메라 트래킹·제스처를 지원하지 않아 실제 동작 확인 불가). Day 3의 Scene Reconstruction(LiDAR)은 LiDAR 탑재 기기(Pro 계열)에서만 실제로 보임 |
 | 개발자 계정 | 무료 Apple ID로도 로컬 실기 빌드/서명 가능 (앱스토어 배포 아님) |
@@ -21,8 +21,9 @@ Spatial Computing 입문자를 위한 6일짜리 spatial computing 학습 Skill 
 | 2 | `/day2-arkit-basics` | ARKit 기초 (세션, 평면 감지, 앵커, 레이캐스트) — 실제 Xcode 프로젝트 시작 |
 | 3 | `/day3-arkit-advanced` | ARKit 심화 (People Occlusion, Face/Body Tracking, Scene Geometry) |
 | 4 | `/day4-realitykit-basics` | RealityKit 기초 (ECS, Entity/Component, PBR 머티리얼) |
-| 5 | `/day5-interaction-gesture` | 상호작용/제스처 (RealityKit 제스처, 충돌·물리, visionOS 인터랙션 모델) |
-| 6 | `/day6-mini-project` | 미니 프로젝트 — 필수 체크리스트 + 주제 자유 캡스톤 |
+| 5 | `/day5-realitykit-advanced` | RealityKit 심화 (파티클, Transform 애니메이션) — iOS 18+ 필요 |
+| 6 | `/day6-interaction-gesture` | 상호작용/제스처 (RealityKit 제스처, 충돌·물리, visionOS 인터랙션 모델) |
+| 7 | `/day7-mini-project` | 미니 프로젝트 — 필수 체크리스트 + 주제 자유 캡스톤 |
 
 ## 설치
 
@@ -52,13 +53,14 @@ Claude Code에서 순서대로 슬래시 명령을 입력하면 됩니다:
 
 ## 실제 Xcode 프로젝트 (`SpatialCampApp/`)
 
-Day 2부터는 작업 폴더에 `SpatialCampApp/`이라는 실제 iOS 앱 프로젝트가 생성되고, 6일에 걸쳐 하나의 앱으로 계속 발전합니다 ([xcodegen](https://github.com/yonaskolb/XcodeGen) 기반 — `project.yml` + `Sources/SpatialCampApp/*.swift`). Day 2부터 코드는 `ARViewContainer.swift`(세션/설정 담당)와 `ARCoordinator.swift`(델리게이트/제스처 이벤트 반응 담당)로 나뉘어 있습니다.
+Day 2부터는 작업 폴더에 `SpatialCampApp/`이라는 실제 iOS 앱 프로젝트가 생성되고, 7일에 걸쳐 하나의 앱으로 계속 발전합니다 ([xcodegen](https://github.com/yonaskolb/XcodeGen) 기반 — `project.yml` + `Sources/SpatialCampApp/*.swift`).
 
 - **Day 2**: `ARSession` + 평면 감지 + `raycast` 탭-투-플레이스 박스 배치 (베이스 앱).
 - **Day 3**: People Occlusion / Scene Reconstruction 설정 추가.
 - **Day 4**: 배치되는 오브젝트를 `PhysicallyBasedMaterial`로 업그레이드.
-- **Day 5**: 배치한 오브젝트에 드래그/회전/스케일 제스처와 충돌 이벤트 추가.
-- **Day 6**: 캡스톤 — 사용자가 고른 주제로 위 기능들을 조합/확장.
+- **Day 5**: 파티클(`ParticleEmitterComponent`) + Transform 애니메이션(팝인 효과) 추가 (배포 타깃을 iOS 18로 올림).
+- **Day 6**: 배치한 오브젝트에 드래그/회전/스케일 제스처와 충돌 이벤트 추가.
+- **Day 7**: 캡스톤 — 사용자가 고른 주제로 위 기능들을 조합/확장.
 
 매 Day마다 코드를 수정한 뒤 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 컴파일을 검증합니다. 단, ARKit 카메라 트래킹·파티클·제스처 등 실제 동작은 시뮬레이터가 지원하지 않으므로, **실기(아이폰/아이패드)를 Xcode에 연결해 직접 빌드·실행**해야 확인할 수 있습니다.
 
@@ -71,7 +73,7 @@ Day 2부터는 작업 폴더에 `SpatialCampApp/`이라는 실제 iOS 앱 프로
 - **화면으로 확인하는 테스트**: 콘솔 로그 대신 앱 화면 상단 상태 배너로 "지금 뭘 하면 되는지"를 바로 보여줍니다.
 - **객관식 체크포인트 퀴즈**: 매일 끝에 `AskUserQuestion`으로 4지선다 3문제를 한 문제씩 진행합니다 (채점이 아니라 피드백 중심, 방향키/클릭 선택).
 - **끊김 없는 진행**: 퀴즈 후 "다음"/"완료"라고 답하면 다음 Day 스킬이 자동으로 이어집니다.
-- **Day 6은 페어 프로그래밍 방식**: 정답 코드를 바로 주지 않고, 설계 질문을 던지며 함께 미니 프로젝트를 완성해갑니다.
+- **Day 7은 페어 프로그래밍 방식**: 정답 코드를 바로 주지 않고, 설계 질문을 던지며 함께 미니 프로젝트를 완성해갑니다.
 
 ## 커스터마이징
 

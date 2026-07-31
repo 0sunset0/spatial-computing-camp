@@ -1,20 +1,20 @@
 ---
-name: day5-interaction-gesture
-description: Day 5 of the Spatial Computing 6-day camp. Teaches interaction design for spatial apps — RealityKit gestures (tap/drag/rotate), collision and physics, and visionOS gaze-and-pinch interaction concepts — via a beginner-friendly, in-chat concept→code→quiz loop per concept (no note files), grounded in current Apple documentation, then codes the real SpatialCampApp Xcode project. Trigger this when the user runs /day5-interaction-gesture, has finished day4-realitykit-basics, or asks about AR gestures, RealityKit collisions, or visionOS interaction models in the context of the spatial computing camp.
+name: day6-interaction-gesture
+description: Day 6 of the Spatial Computing 7-day camp. Teaches interaction design for spatial apps — RealityKit gestures (tap/drag/rotate), collision and physics, and visionOS gaze-and-pinch interaction concepts — via a beginner-friendly, in-chat concept→code→quiz loop per concept (no note files), grounded in current Apple documentation, then codes the real SpatialCampApp Xcode project. Trigger this when the user runs /day6-interaction-gesture, has finished day5-realitykit-advanced, or asks about AR gestures, RealityKit collisions, or visionOS interaction models in the context of the spatial computing camp.
 ---
 
-# Day 5 — 상호작용 / 제스처
+# Day 6 — 상호작용 / 제스처
 
 목표: 지금까지 만든 콘텐츠를 사용자가 실제로 "만질 수 있게" 만든다. iOS AR의 터치 기반 제스처와, visionOS의 시선+손짓 기반 인터랙션 패러다임을 함께 다룬다.
 
-## 프로젝트 규칙 (실제 Xcode 프로젝트에 코딩 — Day 2~4와 동일한 프로젝트를 이어서 사용)
+## 프로젝트 규칙 (실제 Xcode 프로젝트에 코딩 — Day 2~5와 동일한 프로젝트를 이어서 사용)
 
 `SpatialCampApp/Sources/SpatialCampApp/ARViewContainer.swift`(설정 담당)와 `ARCoordinator.swift`(이벤트 반응 담당)를 이어서 수정합니다.
 
 - 박스를 배치하는 부분(`ARCoordinator.swift`의 `handleTap`)에 `generateCollisionShapes` + `arView.installGestures`를 추가해서, 배치한 박스를 드래그/회전/스케일할 수 있게 만드세요. 충돌 이벤트 구독도 추가하세요 (아래 "코드 (실제로 작성)" 참고).
 - 수정 후 `xcodebuild -project SpatialCampApp.xcodeproj -scheme SpatialCampApp -destination 'generic/platform=iOS Simulator' build`로 컴파일 검증. `BUILD SUCCEEDED`까지 고치세요.
 - 제스처 동작은 **실기에서 Xcode로 빌드·실행**해서 직접 만져봐야 확인된다고 안내하세요.
-- **선택 정리**: 사용자가 화면의 앵커 좌표축(xyz 기즈모)이 지저분하다고 느끼면, `ARViewContainer.swift`의 `makeUIView`에 있는 `arView.debugOptions`에서 `.showAnchorOrigins`를 빼도 됩니다 (Day 2에서 트래킹 확인용으로 켰던 디버그 옵션인데, 이제 오브젝트·제스처로 상태가 충분히 보이므로 더 이상 필요 없습니다). `.showFeaturePoints`/`.showSceneUnderstanding`은 유지해도 무방합니다.
+- **선택 정리**: 사용자가 화면의 앵커 좌표축(xyz 기즈모)이 지저분하다고 느끼면, `ARViewContainer.swift`의 `makeUIView`에 있는 `arView.debugOptions`에서 `.showAnchorOrigins`를 빼도 됩니다 (Day 2에서 트래킹 확인용으로 켰던 디버그 옵션인데, 이제 파티클·오브젝트·제스처로 상태가 충분히 보이므로 더 이상 필요 없습니다). `.showFeaturePoints`/`.showSceneUnderstanding`은 유지해도 무방합니다.
 - **코드 작성 시 설명 주석을 함께 남깁니다.** 새로 작성하거나 수정하는 Swift 코드 줄/블록마다, 그게 무엇을 하는지·왜 이렇게 쓰는지 설명하는 한국어 주석을 함께 답니다. 이 캠프는 학습용 자료라서 "자명한 코드엔 주석을 달지 않는다"는 일반적인 클린코드 관례의 예외입니다.
 
 ## 진행 방식 (중요, 모든 Day 공통)
@@ -32,7 +32,7 @@ description: Day 5 of the Spatial Computing 6-day camp. Teaches interaction desi
 3. **개념 2 — 충돌/물리 (CollisionComponent vs PhysicsBodyComponent)**: 개념 설명 → 퀴즈 2 → 피드백 → "이제 충돌이 실제로 감지되는지 콘솔에서 확인할 수 있는 구독 코드를 추가하겠습니다"라고 말한 뒤 `ARCoordinator.swift` 상단에 `import Combine` 추가 + `ARCoordinator`에 `collisionSubscription` 프로퍼티 추가 + `ARViewContainer.swift`의 `makeUIView`에 `arView.scene.subscribe(to: CollisionEvents.Began.self)` 구독을 추가 → `xcodebuild ... build`로 확인.
 4. **개념 3 — iOS AR vs visionOS 인터랙션 모델**: 개념 설명 → 퀴즈 3 → 피드백. 이 프로젝트는 iOS 대상이라 추가 코드는 없으니, 코드 변경 없이 최종 `xcodebuild ... build`로 전체 컴파일을 한 번 더 확인.
 5. 성공/실패를 대화창에 보고 (실패하면 사용자에게 보고하기 전에 먼저 고칠 것).
-6. 모든 게 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 6(캡스톤)로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day6-mini-project` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day6-mini-project`를 직접 호출**하세요.
+6. 모든 게 끝나면, 사용자에게 "다음" 또는 "완료"라고 입력하면 Day 7(캡스톤)로 넘어간다고 안내합니다. 사용자가 "다음"/"완료"(또는 유사 표현)로 응답하면, `/day7-mini-project` 슬래시 명령을 다시 요구하지 말고 **Skill 도구로 `day7-mini-project`를 직접 호출**하세요.
 
 ## 다룰 핵심 개념
 

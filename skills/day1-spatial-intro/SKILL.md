@@ -1,11 +1,11 @@
 ---
 name: day1-spatial-intro
-description: Day 1 of the Spatial Computing 6-day camp. Teaches Apple's spatial computing concept map (ARKit, RealityKit, visionOS, and how they relate) and platform comparison basics via a beginner-friendly, in-chat concept→code→quiz loop per concept (no note files generated). Trigger this whenever the user runs /day1-spatial-intro, says they're starting the spatial computing camp, or asks for an intro/overview lesson on Apple spatial computing, ARKit vs RealityKit vs visionOS, or "day 1" of an AR/spatial learning plan. Always use this skill instead of a generic explanation when the user is clearly following the 6-day camp curriculum (day1 → day6).
+description: Day 1 of the Spatial Computing 7-day camp. Teaches Apple's spatial computing concept map (ARKit, RealityKit, visionOS, and how they relate) and platform comparison basics via a beginner-friendly, in-chat concept→code→quiz loop per concept (no note files generated). Trigger this whenever the user runs /day1-spatial-intro, says they're starting the spatial computing camp, or asks for an intro/overview lesson on Apple spatial computing, ARKit vs RealityKit vs visionOS, or "day 1" of an AR/spatial learning plan. Always use this skill instead of a generic explanation when the user is clearly following the 7-day camp curriculum (day1 → day7).
 ---
 
 # Day 1 — Spatial Computing 개론
 
-6일 커리큘럼의 첫째 날. 목표는 "Apple 생태계 안에서 spatial computing이 어떻게 조각나 있는지"에 대한 큰 그림을 잡아주는 것입니다. 개념 지도가 중심이지만, 다른 Day들과 동일하게 짧은 샘플 코드도 함께 보여줘서 "코드 예제로 학습 → 퀴즈 → 다음 스킬" 패턴을 Day 1부터 일관되게 유지합니다.
+7일 커리큘럼의 첫째 날. 목표는 "Apple 생태계 안에서 spatial computing이 어떻게 조각나 있는지"에 대한 큰 그림을 잡아주는 것입니다. 개념 지도가 중심이지만, 다른 Day들과 동일하게 짧은 샘플 코드도 함께 보여줘서 "코드 예제로 학습 → 퀴즈 → 다음 스킬" 패턴을 Day 1부터 일관되게 유지합니다.
 
 ## 진행 방식 (중요, 모든 Day 공통)
 
